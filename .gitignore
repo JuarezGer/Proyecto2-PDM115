@@ -1,0 +1,62 @@
+# =========================================================
+# Android Studio / Gradle - LabCare
+# Colocar este archivo en la raíz del proyecto como: .gitignore
+# =========================================================
+
+# Archivos generados por Gradle
+.gradle/
+build/
+*/build/
+
+# Archivos locales de Android Studio / IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Configuración local de cada computadora
+local.properties
+
+# Archivos generados por Android Studio
+captures/
+.externalNativeBuild/
+.cxx/
+
+# APK / AAB / archivos compilados
+*.apk
+*.ap_
+*.aab
+*.aar
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Firmas / llaves privadas
+*.jks
+*.keystore
+keystore.properties
+release.properties
+
+# Variables de entorno o secretos locales
+.env
+.env.*
+secrets.properties
+local.defaults.properties
+
+# Archivos temporales
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Kotlin / Java generados
+*.class
+
+# Google Services / Firebase
+# Si usan Firebase, normalmente google-services.json debe compartirse si todos compilan el mismo proyecto.
+# Si contiene claves privadas o usan proyectos separados, NO lo suban y creen un ejemplo.
+# app/google-services.json
