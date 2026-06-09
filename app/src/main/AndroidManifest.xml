@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -31,6 +34,8 @@
         <activity android:name=".indicencia.IncidenciaMenuActivity"/>
         <activity android:name=".laboratorio.LaboratorioMenuActivity"/>
         <activity android:name=".mantenimiento.MantenimientoMenuActivity"/>
+        <activity android:name=".mantenimiento.CrearMantenimientoActivity"/>
+        <activity android:name=".mantenimiento.EliminarMantenimientoActivity"/>
         <activity android:name=".usuario.UsuarioMenuActivity"/>
         <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity"/>
 
