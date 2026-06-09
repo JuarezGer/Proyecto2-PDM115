@@ -7,7 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import ues.fia.proyecto2_pdm115.utils.*;
+import ues.fia.proyecto2_pdm115.utils.SeguridadUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class controlDBLabCare {
 
     private static final String BASE_DATOS = "labcare.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 4;
 
     private final Context context;
     private DatabaseHelper DBHelper;
@@ -106,9 +106,7 @@ public class controlDBLabCare {
                             "WHERE u.correo = ? AND u.activo = 1",
                     new String[]{correo}
             );
-            if (cursor.moveToFirst()) {
-                return cursorAMap(cursor);
-            }
+            if (cursor.moveToFirst()) return cursorAMap(cursor);
             return null;
         } finally {
             if (cursor != null) cursor.close();
@@ -119,12 +117,7 @@ public class controlDBLabCare {
         try {
             ContentValues valores = new ContentValues();
             valores.put("usa_biometria", activar ? 1 : 0);
-            int filas = db.update(
-                    "usuarios",
-                    valores,
-                    "id_usuario = ?",
-                    new String[]{String.valueOf(idUsuario)}
-            );
+            int filas = db.update("usuarios", valores, "id_usuario = ?", new String[]{String.valueOf(idUsuario)});
             return filas > 0 ? "Preferencia biométrica actualizada." : "No se encontró el usuario.";
         } catch (Exception e) {
             return "Error al actualizar biometría: " + e.getMessage();
@@ -331,6 +324,23 @@ public class controlDBLabCare {
                     "FOREIGN KEY (id_usuario_tecnico) REFERENCES usuarios(id_usuario) " +
                     "ON UPDATE CASCADE ON DELETE RESTRICT" +
                     ");");
+
+            db.execSQL("CREATE TABLE evidencias (" +
+                    "id_evidencia INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "id_incidencia INTEGER, " +
+                    "id_mantenimiento INTEGER, " +
+                    "id_usuario INTEGER NOT NULL, " +
+                    "tipo_evidencia TEXT NOT NULL, " +
+                    "ruta_archivo TEXT NOT NULL, " +
+                    "descripcion TEXT, " +
+                    "fecha_registro TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+                    "FOREIGN KEY (id_incidencia) REFERENCES incidencias(id_incidencia) " +
+                    "ON UPDATE CASCADE ON DELETE RESTRICT, " +
+                    "FOREIGN KEY (id_mantenimiento) REFERENCES mantenimientos(id_mantenimiento) " +
+                    "ON UPDATE CASCADE ON DELETE RESTRICT, " +
+                    "FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) " +
+                    "ON UPDATE CASCADE ON DELETE RESTRICT" +
+                    ");");
         }
 
         private void crearTriggers(SQLiteDatabase db) {
@@ -478,7 +488,7 @@ public class controlDBLabCare {
                     "SELECT RAISE(ABORT, 'fecha_fin no puede ser menor que fecha_inicio'); " +
                     "END;");
 
-            // Al crear mantenimiento, el equipo queda en mantenimiento.
+            // Al crear mantenimiento pendiente/en proceso, el equipo queda en mantenimiento.
             db.execSQL("CREATE TRIGGER trg_mantenimientos_ai_estado_equipo " +
                     "AFTER INSERT ON mantenimientos " +
                     "FOR EACH ROW " +
@@ -489,20 +499,21 @@ public class controlDBLabCare {
                     "WHERE id_equipo = NEW.id_equipo; " +
                     "END;");
 
-// Al crear mantenimiento, la incidencia queda en proceso.
+            // Al crear mantenimiento con incidencia, la incidencia queda en proceso.
             db.execSQL("CREATE TRIGGER trg_mantenimientos_ai_estado_incidencia " +
                     "AFTER INSERT ON mantenimientos " +
                     "FOR EACH ROW " +
-                    "WHEN NEW.id_incidencia IS NOT NULL " +
+                    "WHEN NEW.estado_mantenimiento IN ('pendiente', 'en_proceso') " +
+                    "AND NEW.id_incidencia IS NOT NULL " +
                     "BEGIN " +
                     "UPDATE incidencias " +
                     "SET estado_incidencia = 'en_proceso' " +
                     "WHERE id_incidencia = NEW.id_incidencia; " +
                     "END;");
 
-// Al finalizar mantenimiento, el equipo vuelve a activo.
-            db.execSQL("CREATE TRIGGER trg_mantenimientos_au_estado_equipo " +
-                    "AFTER UPDATE ON mantenimientos " +
+            // Si se inserta un mantenimiento ya finalizado, sincroniza equipo e incidencia.
+            db.execSQL("CREATE TRIGGER trg_mantenimientos_ai_finalizado_equipo " +
+                    "AFTER INSERT ON mantenimientos " +
                     "FOR EACH ROW " +
                     "WHEN NEW.estado_mantenimiento = 'finalizado' " +
                     "BEGIN " +
@@ -511,7 +522,35 @@ public class controlDBLabCare {
                     "WHERE id_equipo = NEW.id_equipo; " +
                     "END;");
 
-// Al finalizar mantenimiento, la incidencia queda resuelta.
+            db.execSQL("CREATE TRIGGER trg_mantenimientos_ai_finalizado_incidencia " +
+                    "AFTER INSERT ON mantenimientos " +
+                    "FOR EACH ROW " +
+                    "WHEN NEW.estado_mantenimiento = 'finalizado' " +
+                    "AND NEW.id_incidencia IS NOT NULL " +
+                    "BEGIN " +
+                    "UPDATE incidencias " +
+                    "SET estado_incidencia = 'resuelta' " +
+                    "WHERE id_incidencia = NEW.id_incidencia; " +
+                    "END;");
+
+            // Al finalizar mantenimiento, el equipo vuelve a activo.
+            db.execSQL("CREATE TRIGGER trg_mantenimientos_au_estado_equipo " +
+                    "AFTER UPDATE ON mantenimientos " +
+                    "FOR EACH ROW " +
+                    "WHEN NEW.estado_mantenimiento = 'finalizado' " +
+                    "BEGIN " +
+                    "UPDATE equipos " +
+                    "SET estado_equipo = 'activo' " +
+                    "WHERE id_equipo = NEW.id_equipo " +
+                    "AND NOT EXISTS (" +
+                    "SELECT 1 FROM mantenimientos " +
+                    "WHERE id_equipo = NEW.id_equipo " +
+                    "AND id_mantenimiento <> NEW.id_mantenimiento " +
+                    "AND estado_mantenimiento IN ('pendiente', 'en_proceso')" +
+                    "); " +
+                    "END;");
+
+            // Al finalizar mantenimiento, la incidencia queda resuelta.
             db.execSQL("CREATE TRIGGER trg_mantenimientos_au_estado_incidencia " +
                     "AFTER UPDATE ON mantenimientos " +
                     "FOR EACH ROW " +
@@ -522,6 +561,41 @@ public class controlDBLabCare {
                     "SET estado_incidencia = 'resuelta' " +
                     "WHERE id_incidencia = NEW.id_incidencia; " +
                     "END;");
+
+            // Validaciones de evidencias para archivos de cámara, galería, audio o documentos.
+            db.execSQL("CREATE TRIGGER trg_evidencias_bi_relacion " +
+                    "BEFORE INSERT ON evidencias " +
+                    "FOR EACH ROW " +
+                    "WHEN NEW.id_incidencia IS NULL AND NEW.id_mantenimiento IS NULL " +
+                    "BEGIN " +
+                    "SELECT RAISE(ABORT, 'La evidencia debe estar asociada a una incidencia o mantenimiento'); " +
+                    "END;");
+
+            db.execSQL("CREATE TRIGGER trg_evidencias_bu_relacion " +
+                    "BEFORE UPDATE ON evidencias " +
+                    "FOR EACH ROW " +
+                    "WHEN NEW.id_incidencia IS NULL AND NEW.id_mantenimiento IS NULL " +
+                    "BEGIN " +
+                    "SELECT RAISE(ABORT, 'La evidencia debe estar asociada a una incidencia o mantenimiento'); " +
+                    "END;");
+
+            db.execSQL("CREATE TRIGGER trg_evidencias_bi_tipo " +
+                    "BEFORE INSERT ON evidencias " +
+                    "FOR EACH ROW " +
+                    "WHEN NEW.tipo_evidencia NOT IN ('foto', 'video', 'audio', 'documento') " +
+                    "OR trim(NEW.ruta_archivo) = '' " +
+                    "BEGIN " +
+                    "SELECT RAISE(ABORT, 'Tipo de evidencia o ruta de archivo no valida'); " +
+                    "END;");
+
+            db.execSQL("CREATE TRIGGER trg_evidencias_bu_tipo " +
+                    "BEFORE UPDATE ON evidencias " +
+                    "FOR EACH ROW " +
+                    "WHEN NEW.tipo_evidencia NOT IN ('foto', 'video', 'audio', 'documento') " +
+                    "OR trim(NEW.ruta_archivo) = '' " +
+                    "BEGIN " +
+                    "SELECT RAISE(ABORT, 'Tipo de evidencia o ruta de archivo no valida'); " +
+                    "END;");
         }
 
         private void llenarDatosIniciales(SQLiteDatabase db) {
@@ -529,17 +603,24 @@ public class controlDBLabCare {
             insertarRolInicial(db, "Administrador");
             insertarRolInicial(db, "Tecnico");
             insertarRolInicial(db, "Reportante");
+            insertarRolInicial(db, "Supervisor");
 
-            insertarUsuarioInicial(db, 1, "Admin", "Sistema", "admin@labcare.com", SeguridadUtils.sha256("admin123"), 1, 1);
-            insertarUsuarioInicial(db, 2, "Carlos", "Tecnico", "tecnico@labcare.com", SeguridadUtils.sha256("tec123"), 0, 1);
-            insertarUsuarioInicial(db, 3, "Ana", "Docente", "reportante@labcare.com", SeguridadUtils.sha256("rep123"), 0, 1);
+            insertarUsuarioInicial(db, 1, "Admin", "Sistema", "admin@labcare.com", "admin123", 1, 1);
+            insertarUsuarioInicial(db, 2, "Carlos", "Hernandez", "tecnico@labcare.com", "tec123", 1, 1);
+            insertarUsuarioInicial(db, 3, "Ana", "Docente", "reportante@labcare.com", "rep123", 0, 1);
+            insertarUsuarioInicial(db, 4, "Mariana", "Lopez", "supervisor@labcare.com", "sup123", 1, 1);
+            insertarUsuarioInicial(db, 2, "Jose", "Martinez", "jose.tecnico@labcare.com", "jose123", 0, 1);
 
             insertarEdificioInicial(db, "Edificio de Ingenieria", "EING", 13.7167, -89.2033);
             insertarEdificioInicial(db, "Edificio de Ciencias", "ECIE", 13.7170, -89.2040);
+            insertarEdificioInicial(db, "Edificio de Biblioteca", "EBIB", 13.7174, -89.2046);
+            insertarEdificioInicial(db, "Edificio Administrativo", "EADM", 13.7162, -89.2027);
 
             insertarLaboratorioInicial(db, 1, "Laboratorio de Informatica 1", "LAB-INF-01", "Piso 1", 13.7168, -89.2035);
             insertarLaboratorioInicial(db, 1, "Laboratorio de Redes", "LAB-RED-01", "Piso 2", 13.7169, -89.2036);
             insertarLaboratorioInicial(db, 2, "Laboratorio de Electronica", "LAB-ELE-01", "Piso 1", 13.7171, -89.2042);
+            insertarLaboratorioInicial(db, 2, "Laboratorio de Fisica", "LAB-FIS-01", "Piso 2", 13.7172, -89.2043);
+            insertarLaboratorioInicial(db, 3, "Sala de Computo Biblioteca", "LAB-BIB-01", "Piso 1", 13.7175, -89.2047);
 
             insertarCategoriaInicial(db, "Computadora");
             insertarCategoriaInicial(db, "Proyector");
@@ -551,6 +632,7 @@ public class controlDBLabCare {
             insertarEquipoInicial(db, 1, 2, "INV-PRO-001", "QR-PRO-001", "Proyector Epson", "Epson", "X49", "activo");
             insertarEquipoInicial(db, 2, 3, "INV-ROU-001", "QR-ROU-001", "Router Cisco", "Cisco", "ISR 1100", "activo");
             insertarEquipoInicial(db, 3, 5, "INV-OSC-001", "QR-OSC-001", "Osciloscopio", "Rigol", "DS1054Z", "activo");
+            insertarEquipoInicial(db, 5, 4, "INV-IMP-001", "QR-IMP-001", "Impresora HP LaserJet", "HP", "LaserJet Pro", "activo");
 
             insertarTipoIncidenciaInicial(db, "Hardware");
             insertarTipoIncidenciaInicial(db, "Software");
@@ -560,6 +642,21 @@ public class controlDBLabCare {
 
             insertarIncidenciaInicial(db, 1, 3, 1, "Equipo no enciende", "La computadora no inicia correctamente.", "alta", "pendiente", "manual", null, 13.7168, -89.2035);
             insertarIncidenciaInicial(db, 2, 3, 1, "Proyector sin imagen", "El proyector enciende, pero no muestra imagen.", "media", "pendiente", "voz", "El proyector no muestra imagen", 13.7168, -89.2035);
+            insertarIncidenciaInicial(db, 3, 4, 3, "Sin conexion a internet", "El router no entrega conectividad al laboratorio.", "critica", "pendiente", "qr", null, 13.7169, -89.2036);
+            insertarIncidenciaInicial(db, 4, 3, 4, "Revision preventiva", "Programar revision mensual del osciloscopio.", "baja", "pendiente", "manual", null, 13.7171, -89.2042);
+            insertarIncidenciaInicial(db, 5, 4, 1, "Impresora atasca papel", "La impresora presenta atasco al imprimir varias paginas.", "media", "pendiente", "manual", null, 13.7175, -89.2047);
+
+            insertarMantenimientoInicial(db, 1, 1, 1, 2, "correctivo", "en_proceso", "Fuente de poder en revision", "Pendiente de repuesto", "2026-06-01 08:00:00", null);
+            insertarMantenimientoInicial(db, 2, 2, 1, 5, "correctivo", "pendiente", "Revision de cable HDMI", null, "2026-06-02 09:30:00", null);
+            insertarMantenimientoInicial(db, 3, 3, 4, 2, "correctivo", "en_proceso", "Diagnostico de conectividad", "Se reinicio configuracion inicial", "2026-06-03 10:00:00", null);
+            insertarMantenimientoInicial(db, 4, 4, 4, 5, "preventivo", "finalizado", "Revision general completada", "Limpieza y calibracion basica", "2026-06-04 08:30:00", "2026-06-04 10:30:00");
+            insertarMantenimientoInicial(db, 5, 5, 1, 2, "correctivo", "pendiente", "Revisar rodillos de impresion", null, "2026-06-05 11:00:00", null);
+
+            insertarEvidenciaInicial(db, 1, 1, 3, "foto", "content://labcare/evidencias/incidencia_1_foto.jpg", "Foto del equipo sin encender");
+            insertarEvidenciaInicial(db, 2, 2, 3, "audio", "content://labcare/evidencias/incidencia_2_audio.m4a", "Audio reportado por voz");
+            insertarEvidenciaInicial(db, 3, 3, 4, "foto", "content://labcare/evidencias/router_sin_red.jpg", "Estado del router al reportar falla");
+            insertarEvidenciaInicial(db, 4, 4, 5, "documento", "content://labcare/evidencias/reporte_preventivo_osc.pdf", "Reporte preventivo del osciloscopio");
+            insertarEvidenciaInicial(db, 5, 5, 4, "video", "content://labcare/evidencias/impresora_atasco.mp4", "Video del atasco de papel");
         }
 
         private void insertarRolInicial(SQLiteDatabase db, String nombre) {
@@ -646,6 +743,41 @@ public class controlDBLabCare {
             db.insertWithOnConflict("incidencias", null, valores, SQLiteDatabase.CONFLICT_IGNORE);
         }
 
+        private void insertarMantenimientoInicial(SQLiteDatabase db, int idEquipo, Integer idIncidencia,
+                                                  int idUsuarioCrea, int idUsuarioTecnico,
+                                                  String tipoMantenimiento, String estadoMantenimiento,
+                                                  String diagnostico, String solucionAplicada,
+                                                  String fechaInicio, String fechaFin) {
+            ContentValues valores = new ContentValues();
+            valores.put("id_equipo", idEquipo);
+            if (idIncidencia == null) valores.putNull("id_incidencia");
+            else valores.put("id_incidencia", idIncidencia);
+            valores.put("id_usuario_crea", idUsuarioCrea);
+            valores.put("id_usuario_tecnico", idUsuarioTecnico);
+            valores.put("tipo_mantenimiento", tipoMantenimiento);
+            valores.put("estado_mantenimiento", estadoMantenimiento);
+            valores.put("diagnostico", diagnostico);
+            valores.put("solucion_aplicada", solucionAplicada);
+            valores.put("fecha_inicio", fechaInicio);
+            valores.put("fecha_fin", fechaFin);
+            db.insertWithOnConflict("mantenimientos", null, valores, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+
+        private void insertarEvidenciaInicial(SQLiteDatabase db, Integer idIncidencia, Integer idMantenimiento,
+                                              int idUsuario, String tipoEvidencia,
+                                              String rutaArchivo, String descripcion) {
+            ContentValues valores = new ContentValues();
+            if (idIncidencia == null) valores.putNull("id_incidencia");
+            else valores.put("id_incidencia", idIncidencia);
+            if (idMantenimiento == null) valores.putNull("id_mantenimiento");
+            else valores.put("id_mantenimiento", idMantenimiento);
+            valores.put("id_usuario", idUsuario);
+            valores.put("tipo_evidencia", tipoEvidencia);
+            valores.put("ruta_archivo", rutaArchivo);
+            valores.put("descripcion", descripcion);
+            db.insertWithOnConflict("evidencias", null, valores, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+
         private static void putDoubleOrNull(ContentValues valores, String columna, Double valor) {
             if (valor == null) valores.putNull(columna);
             else valores.put(columna, valor);
@@ -669,13 +801,18 @@ public class controlDBLabCare {
             db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_fechas_bi");
             db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_fechas_bu");
             db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_ai_estado_equipo");
-            db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_au_finalizado");
-            db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_ai_estado_equipo");
             db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_ai_estado_incidencia");
+            db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_ai_finalizado_equipo");
+            db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_ai_finalizado_incidencia");
             db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_au_finalizado");
             db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_au_estado_equipo");
             db.execSQL("DROP TRIGGER IF EXISTS trg_mantenimientos_au_estado_incidencia");
+            db.execSQL("DROP TRIGGER IF EXISTS trg_evidencias_bi_relacion");
+            db.execSQL("DROP TRIGGER IF EXISTS trg_evidencias_bu_relacion");
+            db.execSQL("DROP TRIGGER IF EXISTS trg_evidencias_bi_tipo");
+            db.execSQL("DROP TRIGGER IF EXISTS trg_evidencias_bu_tipo");
 
+            db.execSQL("DROP TABLE IF EXISTS evidencias");
             db.execSQL("DROP TABLE IF EXISTS mantenimientos");
             db.execSQL("DROP TABLE IF EXISTS incidencias");
             db.execSQL("DROP TABLE IF EXISTS tipos_incidencia");
@@ -1423,6 +1560,154 @@ public class controlDBLabCare {
     }
 
     // =========================================================
+    // CRUD EVIDENCIAS
+    // =========================================================
+
+    public String insertarEvidencia(Integer idIncidencia, Integer idMantenimiento, int idUsuario,
+                                    String tipoEvidencia, String rutaArchivo, String descripcion) {
+        try {
+            ContentValues valores = new ContentValues();
+            if (idIncidencia == null) valores.putNull("id_incidencia");
+            else valores.put("id_incidencia", idIncidencia);
+            if (idMantenimiento == null) valores.putNull("id_mantenimiento");
+            else valores.put("id_mantenimiento", idMantenimiento);
+            valores.put("id_usuario", idUsuario);
+            valores.put("tipo_evidencia", tipoEvidencia);
+            valores.put("ruta_archivo", rutaArchivo);
+            valores.put("descripcion", descripcion);
+            long resultado = db.insertOrThrow("evidencias", null, valores);
+            return resultado == -1 ? "Error al insertar evidencia." : "Evidencia insertada correctamente.";
+        } catch (SQLiteConstraintException e) {
+            return "Error de integridad: Verifique incidencia, mantenimiento, usuario, tipo y ruta. " + e.getMessage();
+        } catch (Exception e) {
+            return "Error al insertar evidencia: " + e.getMessage();
+        }
+    }
+
+    public Cursor consultarEvidenciasCursor() {
+        return db.rawQuery(
+                "SELECT ev.id_evidencia, ev.tipo_evidencia, ev.ruta_archivo, ev.descripcion, ev.fecha_registro, " +
+                        "ev.id_incidencia, ev.id_mantenimiento, " +
+                        "i.titulo AS incidencia, m.tipo_mantenimiento AS mantenimiento, " +
+                        "u.nombres || ' ' || u.apellidos AS usuario " +
+                        "FROM evidencias ev " +
+                        "LEFT JOIN incidencias i ON i.id_incidencia = ev.id_incidencia " +
+                        "LEFT JOIN mantenimientos m ON m.id_mantenimiento = ev.id_mantenimiento " +
+                        "INNER JOIN usuarios u ON u.id_usuario = ev.id_usuario " +
+                        "ORDER BY ev.fecha_registro DESC, ev.id_evidencia DESC",
+                null
+        );
+    }
+
+    public HashMap<String, String> consultarEvidencia(int idEvidencia) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(
+                    "SELECT ev.*, i.titulo AS incidencia, m.tipo_mantenimiento AS mantenimiento, " +
+                            "u.nombres || ' ' || u.apellidos AS usuario " +
+                            "FROM evidencias ev " +
+                            "LEFT JOIN incidencias i ON i.id_incidencia = ev.id_incidencia " +
+                            "LEFT JOIN mantenimientos m ON m.id_mantenimiento = ev.id_mantenimiento " +
+                            "INNER JOIN usuarios u ON u.id_usuario = ev.id_usuario " +
+                            "WHERE ev.id_evidencia = ?",
+                    new String[]{String.valueOf(idEvidencia)}
+            );
+            if (cursor.moveToFirst()) return cursorAMap(cursor);
+            return null;
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    public String actualizarEvidencia(int idEvidencia, Integer idIncidencia, Integer idMantenimiento,
+                                      int idUsuario, String tipoEvidencia,
+                                      String rutaArchivo, String descripcion) {
+        try {
+            ContentValues valores = new ContentValues();
+            if (idIncidencia == null) valores.putNull("id_incidencia");
+            else valores.put("id_incidencia", idIncidencia);
+            if (idMantenimiento == null) valores.putNull("id_mantenimiento");
+            else valores.put("id_mantenimiento", idMantenimiento);
+            valores.put("id_usuario", idUsuario);
+            valores.put("tipo_evidencia", tipoEvidencia);
+            valores.put("ruta_archivo", rutaArchivo);
+            valores.put("descripcion", descripcion);
+            int filas = db.update("evidencias", valores, "id_evidencia = ?", new String[]{String.valueOf(idEvidencia)});
+            return filas > 0 ? "Evidencia actualizada correctamente." : "No se encontró la evidencia.";
+        } catch (SQLiteConstraintException e) {
+            return "Error de integridad: Verifique incidencia, mantenimiento, usuario, tipo y ruta. " + e.getMessage();
+        } catch (Exception e) {
+            return "Error al actualizar evidencia: " + e.getMessage();
+        }
+    }
+
+    public String eliminarEvidencia(int idEvidencia) {
+        try {
+            int filas = db.delete("evidencias", "id_evidencia = ?", new String[]{String.valueOf(idEvidencia)});
+            return filas > 0 ? "Evidencia eliminada correctamente." : "No se encontró la evidencia.";
+        } catch (SQLiteConstraintException e) {
+            return "No se puede eliminar la evidencia porque tiene registros relacionados.";
+        } catch (Exception e) {
+            return "Error al eliminar evidencia: " + e.getMessage();
+        }
+    }
+
+    public Cursor consultarEvidenciasPorIncidenciaCursor(int idIncidencia) {
+        return db.rawQuery(
+                "SELECT * FROM evidencias WHERE id_incidencia = ? ORDER BY fecha_registro DESC",
+                new String[]{String.valueOf(idIncidencia)}
+        );
+    }
+
+    public Cursor consultarEvidenciasPorMantenimientoCursor(int idMantenimiento) {
+        return db.rawQuery(
+                "SELECT * FROM evidencias WHERE id_mantenimiento = ? ORDER BY fecha_registro DESC",
+                new String[]{String.valueOf(idMantenimiento)}
+        );
+    }
+
+    // =========================================================
+    // MÉTODOS DE APOYO PARA LIBRERÍAS
+    // =========================================================
+
+    public String actualizarCodigoQrEquipo(int idEquipo, String codigoQr) {
+        try {
+            ContentValues valores = new ContentValues();
+            valores.put("codigo_qr", codigoQr);
+            int filas = db.update("equipos", valores, "id_equipo = ?", new String[]{String.valueOf(idEquipo)});
+            return filas > 0 ? "Código QR actualizado correctamente." : "No se encontró el equipo.";
+        } catch (SQLiteConstraintException e) {
+            return "Error: El código QR ya está asignado a otro equipo.";
+        } catch (Exception e) {
+            return "Error al actualizar QR: " + e.getMessage();
+        }
+    }
+
+    public String actualizarUbicacionEdificio(int idEdificio, Double latitud, Double longitud) {
+        ContentValues valores = new ContentValues();
+        putDoubleOrNull(valores, "latitud", latitud);
+        putDoubleOrNull(valores, "longitud", longitud);
+        int filas = db.update("edificios", valores, "id_edificio = ?", new String[]{String.valueOf(idEdificio)});
+        return filas > 0 ? "Ubicación de edificio actualizada." : "No se encontró el edificio.";
+    }
+
+    public String actualizarUbicacionLaboratorio(int idLaboratorio, Double latitud, Double longitud) {
+        ContentValues valores = new ContentValues();
+        putDoubleOrNull(valores, "latitud", latitud);
+        putDoubleOrNull(valores, "longitud", longitud);
+        int filas = db.update("laboratorios", valores, "id_laboratorio = ?", new String[]{String.valueOf(idLaboratorio)});
+        return filas > 0 ? "Ubicación de laboratorio actualizada." : "No se encontró el laboratorio.";
+    }
+
+    public String actualizarUbicacionIncidencia(int idIncidencia, Double latitud, Double longitud) {
+        ContentValues valores = new ContentValues();
+        putDoubleOrNull(valores, "latitud", latitud);
+        putDoubleOrNull(valores, "longitud", longitud);
+        int filas = db.update("incidencias", valores, "id_incidencia = ?", new String[]{String.valueOf(idIncidencia)});
+        return filas > 0 ? "Ubicación de incidencia actualizada." : "No se encontró la incidencia.";
+    }
+
+    // =========================================================
     // CONSULTAS PARA REPORTES / ESTADÍSTICAS
     // =========================================================
 
@@ -1478,6 +1763,36 @@ public class controlDBLabCare {
                         "WHERE m.id_usuario_tecnico = ? " +
                         "ORDER BY m.id_mantenimiento DESC",
                 new String[]{String.valueOf(idUsuarioTecnico)}
+        );
+    }
+
+    public Cursor consultarEstadisticaEquiposPorEstadoCursor() {
+        return db.rawQuery(
+                "SELECT estado_equipo, COUNT(*) AS total " +
+                        "FROM equipos " +
+                        "GROUP BY estado_equipo " +
+                        "ORDER BY total DESC",
+                null
+        );
+    }
+
+    public Cursor consultarEstadisticaMantenimientosPorEstadoCursor() {
+        return db.rawQuery(
+                "SELECT estado_mantenimiento, COUNT(*) AS total " +
+                        "FROM mantenimientos " +
+                        "GROUP BY estado_mantenimiento " +
+                        "ORDER BY total DESC",
+                null
+        );
+    }
+
+    public Cursor consultarEstadisticaEvidenciasPorTipoCursor() {
+        return db.rawQuery(
+                "SELECT tipo_evidencia, COUNT(*) AS total " +
+                        "FROM evidencias " +
+                        "GROUP BY tipo_evidencia " +
+                        "ORDER BY total DESC",
+                null
         );
     }
 
@@ -1548,7 +1863,7 @@ public class controlDBLabCare {
             if (db == null || !db.isOpen()) {
                 return "La base de datos no está abierta.";
             }
-            if (contarRegistros("roles") > 0 && contarRegistros("usuarios") > 0 && contarRegistros("equipos") > 0) {
+            if (contarRegistros("roles") > 0 && contarRegistros("usuarios") > 0 && contarRegistros("equipos") > 0 && contarRegistros("evidencias") > 0) {
                 return "Los datos iniciales ya estaban cargados.";
             }
             db.beginTransaction();
