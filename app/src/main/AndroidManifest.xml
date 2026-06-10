@@ -35,6 +35,7 @@
         <activity android:name=".laboratorio.LaboratorioMenuActivity"/>
         <activity android:name=".mantenimiento.MantenimientoMenuActivity"/>
         <activity android:name=".mantenimiento.CrearMantenimientoActivity"/>
+        <activity android:name=".mantenimiento.ModificarMantenimientoActivity"/>
         <activity android:name=".mantenimiento.EliminarMantenimientoActivity"/>
         <activity android:name=".usuario.UsuarioMenuActivity"/>
         <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity"/>

@@ -16,6 +16,7 @@ public class MantenimientoMenuActivity extends Activity {
         setContentView(R.layout.activity_menu_mantenimiento);
 
         findViewById(R.id.btnCrearMantenimiento).setOnClickListener(v -> abrir(CrearMantenimientoActivity.class));
+        findViewById(R.id.btnActualizarMantenimiento).setOnClickListener(v -> abrir(ModificarMantenimientoActivity.class));
         findViewById(R.id.btnEliminarMantenimiento).setOnClickListener(v -> abrir(EliminarMantenimientoActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
         configurarBarraInferior();
