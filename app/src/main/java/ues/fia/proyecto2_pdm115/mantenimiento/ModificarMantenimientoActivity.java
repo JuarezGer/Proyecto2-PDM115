@@ -36,11 +36,24 @@ import ues.fia.proyecto2_pdm115.R;
 import ues.fia.proyecto2_pdm115.controlDBLabCare;
 import ues.fia.proyecto2_pdm115.utils.PermissionHelper;
 
+// Hilos de fondo y manejo asíncrono
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import android.os.Handler;
+import android.os.Looper;
+// Clases del Helper y Diálogos
+import android.app.AlertDialog;
+
 public class ModificarMantenimientoActivity extends AppCompatActivity {
 
     private controlDBLabCare helper;
     private SpeechRecognizer speechRecognizer;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+
+    // — NUEVAS VARIABLES PARA EL PDF Y HILOS —
+    private PdfMantenimientoHelper pdfHelper;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     // Vistas de navegación
     private ViewSwitcher viewSwitcher;
@@ -67,6 +80,8 @@ public class ModificarMantenimientoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_modificar_mantenimiento);
 
         helper = new controlDBLabCare(this);
+
+        pdfHelper = new PdfMantenimientoHelper(this);
 
         vincularVistas();
         configurarRecyclerView();
@@ -334,8 +349,17 @@ public class ModificarMantenimientoActivity extends AppCompatActivity {
 
         if (resultado.contains("correctamente")) {
             Toast.makeText(this, "Mantenimiento actualizado con éxito", Toast.LENGTH_SHORT).show();
+
+            // Guardamos el ID en una variable local final para usarla dentro del hilo
+            final int idMantenimientoActual = idMantenimientoSeleccionado;
+
+            // Cambiamos de vista y recargamos de inmediato la lista principal
             volverALista();
             cargarMantenimientos();
+
+            // Preguntar al usuario si desea exportar y visualizar el PDF
+            procesarGeneracionPdf(idMantenimientoActual);
+
         } else {
             Toast.makeText(this, "Error: " + resultado, Toast.LENGTH_LONG).show();
         }
@@ -369,10 +393,43 @@ public class ModificarMantenimientoActivity extends AppCompatActivity {
         }
     }
 
+    private void procesarGeneracionPdf(int idMantenimiento) {
+        new AlertDialog.Builder(this)
+                .setTitle("Generar Reporte PDF")
+                .setMessage("¿Deseas generar y abrir el comprobante en PDF para este mantenimiento?")
+                .setPositiveButton("Sí, Generar", (dialog, which) -> {
+                    Toast.makeText(ModificarMantenimientoActivity.this, "Generando PDF...", Toast.LENGTH_SHORT).show();
+
+                    // Ejecución en segundo plano para no congelar la UI
+                    executorService.execute(() -> {
+                        // 1. Obtener los datos completos mediante tu consulta del controlador
+                        Cursor cursorReporte = helper.obtenerDatosCompletosMantenimiento(idMantenimiento);
+
+                        // 2. Generar el PDF usando el helper corregido
+                        String rutaOUriResultado = pdfHelper.generarPdf(cursorReporte, idMantenimiento);
+
+                        // 3. Regresar al hilo principal para mostrar resultados o abrir el archivo
+                        mainHandler.post(() -> {
+                            if (rutaOUriResultado != null) {
+                                Toast.makeText(ModificarMantenimientoActivity.this, "PDF guardado en Documentos", Toast.LENGTH_SHORT).show();
+                                // Abre la aplicación externa para ver el PDF
+                                pdfHelper.abrirPdf(rutaOUriResultado);
+                            } else {
+                                Toast.makeText(ModificarMantenimientoActivity.this, "Error al estructurar el PDF", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    });
+                })
+                .setNegativeButton("Ahora no", null)
+                .show();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (speechRecognizer != null) speechRecognizer.destroy();
         if (helper != null) helper.cerrar();
+        // Apagamos el servicio de hilos para evitar fugas de memoria
+        executorService.shutdown();
     }
 }

@@ -1907,4 +1907,42 @@ public class controlDBLabCare {
         }
         return lista;
     }
+
+    // MÉTODO NUEVO — Obtener todos los datos relacionados de un mantenimiento para el PDF
+    public Cursor obtenerDatosCompletosMantenimiento(int idMantenimiento) {
+        SQLiteDatabase db = DBHelper.getReadableDatabase();
+        String query =
+                "SELECT " +
+                        "m.id_mantenimiento, " +
+                        "m.tipo_mantenimiento, " +
+                        "m.estado_mantenimiento, " +
+                        "m.diagnostico, " +
+                        "m.solucion_aplicada, " +
+                        "m.fecha_inicio, " +
+                        "m.fecha_fin, " +
+                        "e.nombre AS nombre_equipo, " +
+                        "e.codigo_inventario, " +
+                        "e.marca, " +
+                        "e.modelo, " +
+                        "e.estado_equipo, " +
+                        "l.nombre AS nombre_laboratorio, " +
+                        "l.piso, " +
+                        "ed.nombre AS nombre_edificio, " +
+                        "i.titulo AS titulo_incidencia, " +
+                        "i.descripcion AS descripcion_incidencia, " +
+                        "i.prioridad, " +
+                        "i.fecha_reporte, " +
+                        "uc.nombres || ' ' || uc.apellidos AS nombre_creador, " +
+                        "ut.nombres || ' ' || ut.apellidos AS nombre_tecnico " +
+                        "FROM mantenimientos m " +
+                        "INNER JOIN equipos e ON m.id_equipo = e.id_equipo " +
+                        "INNER JOIN laboratorios l ON e.id_laboratorio = l.id_laboratorio " +
+                        "INNER JOIN edificios ed ON l.id_edificio = ed.id_edificio " +
+                        "LEFT JOIN incidencias i ON m.id_incidencia = i.id_incidencia " +
+                        "INNER JOIN usuarios uc ON m.id_usuario_crea = uc.id_usuario " +
+                        "INNER JOIN usuarios ut ON m.id_usuario_tecnico = ut.id_usuario " +
+                        "WHERE m.id_mantenimiento = ?";
+
+        return db.rawQuery(query, new String[]{String.valueOf(idMantenimiento)});
+    }
 }
