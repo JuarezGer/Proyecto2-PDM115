@@ -14,6 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyecto2PDM115">
+        <activity
+            android:name=".mantenimiento.ConsultarMantenimientoActivity"
+            android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -23,32 +27,35 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:exported="false" />
-        <activity android:name=".LoginBiometricoActivity" android:exported="false" />
-
-        <!-- Submenús CRUD LabCare -->
-        <activity android:name=".rol.RolMenuActivity"/>
-        <activity android:name=".categoriaEquipo.CategoriaEquipoMenuActivity"/>
-        <activity android:name=".edificio.EdificioMenuActivity"/>
-        <activity android:name=".equipo.EquipoMenuActivity"/>
-        <activity android:name=".evidencia.EvidenciaMenuActivity"/>
-        <activity android:name=".indicencia.IncidenciaMenuActivity"/>
-        <activity android:name=".laboratorio.LaboratorioMenuActivity"/>
-        <activity android:name=".mantenimiento.MantenimientoMenuActivity"/>
-        <activity android:name=".mantenimiento.CrearMantenimientoActivity"/>
-        <activity android:name=".mantenimiento.ModificarMantenimientoActivity"/>
-        <activity android:name=".mantenimiento.EliminarMantenimientoActivity"/>
-        <activity android:name=".usuario.UsuarioMenuActivity"/>
-        <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity"/>
-
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginBiometricoActivity"
+            android:exported="false" /> <!-- Submenús CRUD LabCare -->
+        <activity android:name=".rol.RolMenuActivity" />
+        <activity android:name=".categoriaEquipo.CategoriaEquipoMenuActivity" />
+        <activity android:name=".edificio.EdificioMenuActivity" />
+        <activity android:name=".equipo.EquipoMenuActivity" />
+        <activity android:name=".evidencia.EvidenciaMenuActivity" />
+        <activity android:name=".indicencia.IncidenciaMenuActivity" />
+        <activity android:name=".laboratorio.LaboratorioMenuActivity" />
+        <activity android:name=".mantenimiento.MantenimientoMenuActivity" />
+        <activity android:name=".mantenimiento.CrearMantenimientoActivity" />
+        <activity android:name=".mantenimiento.ModificarMantenimientoActivity" />
+        <activity android:name=".mantenimiento.EliminarMantenimientoActivity" />
+        <activity android:name=".usuario.UsuarioMenuActivity" />
+        <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" />
     </application>
 
 </manifest>

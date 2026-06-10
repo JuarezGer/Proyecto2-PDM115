@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/detIdMantenimiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="General" android:textStyle="bold" android:textColor="@android:color/darker_gray" android:layout_marginTop="8dp"/>
+        <TextView android:id="@+id/detTipo" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" />
+        <TextView android:id="@+id/detEstado" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold"/>
+        <TextView android:id="@+id/detFechas" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:textColor="@android:color/holo_blue_dark"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Diagnóstico" android:textStyle="bold" android:textColor="@android:color/darker_gray" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/detDiagnostico" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Solución Aplicada" android:textStyle="bold" android:textColor="@android:color/darker_gray" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/detSolucion" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Información del Equipo" android:textStyle="bold" android:textColor="@android:color/darker_gray" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/detEquipo" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ubicación" android:textStyle="bold" android:textColor="@android:color/darker_gray" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/detUbicacion" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Incidencia Relacionada" android:textStyle="bold" android:textColor="@android:color/darker_gray" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/detIncidencia" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Personal Involucrado" android:textStyle="bold" android:textColor="@android:color/darker_gray" android:layout_marginTop="12dp"/>
+        <TextView android:id="@+id/detPersonal" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+</ScrollView>
