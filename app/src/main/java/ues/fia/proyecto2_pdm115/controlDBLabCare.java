@@ -329,7 +329,6 @@ public class controlDBLabCare {
                     "id_evidencia INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "id_incidencia INTEGER, " +
                     "id_mantenimiento INTEGER, " +
-                    "id_usuario INTEGER NOT NULL, " +
                     "tipo_evidencia TEXT NOT NULL, " +
                     "ruta_archivo TEXT NOT NULL, " +
                     "descripcion TEXT, " +
@@ -337,8 +336,6 @@ public class controlDBLabCare {
                     "FOREIGN KEY (id_incidencia) REFERENCES incidencias(id_incidencia) " +
                     "ON UPDATE CASCADE ON DELETE RESTRICT, " +
                     "FOREIGN KEY (id_mantenimiento) REFERENCES mantenimientos(id_mantenimiento) " +
-                    "ON UPDATE CASCADE ON DELETE RESTRICT, " +
-                    "FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) " +
                     "ON UPDATE CASCADE ON DELETE RESTRICT" +
                     ");");
         }
@@ -652,11 +649,11 @@ public class controlDBLabCare {
             insertarMantenimientoInicial(db, 4, 4, 4, 5, "preventivo", "finalizado", "Revision general completada", "Limpieza y calibracion basica", "2026-06-04 08:30:00", "2026-06-04 10:30:00");
             insertarMantenimientoInicial(db, 5, 5, 1, 2, "correctivo", "pendiente", "Revisar rodillos de impresion", null, "2026-06-05 11:00:00", null);
 
-            insertarEvidenciaInicial(db, 1, 1, 3, "foto", "content://labcare/evidencias/incidencia_1_foto.jpg", "Foto del equipo sin encender");
-            insertarEvidenciaInicial(db, 2, 2, 3, "audio", "content://labcare/evidencias/incidencia_2_audio.m4a", "Audio reportado por voz");
-            insertarEvidenciaInicial(db, 3, 3, 4, "foto", "content://labcare/evidencias/router_sin_red.jpg", "Estado del router al reportar falla");
-            insertarEvidenciaInicial(db, 4, 4, 5, "documento", "content://labcare/evidencias/reporte_preventivo_osc.pdf", "Reporte preventivo del osciloscopio");
-            insertarEvidenciaInicial(db, 5, 5, 4, "video", "content://labcare/evidencias/impresora_atasco.mp4", "Video del atasco de papel");
+            insertarEvidenciaInicial(db, 1, 1, "foto", "content://labcare/evidencias/incidencia_1_foto.jpg", "Foto del equipo sin encender");
+            insertarEvidenciaInicial(db, 2, 2, "audio", "content://labcare/evidencias/incidencia_2_audio.m4a", "Audio reportado por voz");
+            insertarEvidenciaInicial(db, 3, 3, "foto", "content://labcare/evidencias/router_sin_red.jpg", "Estado del router al reportar falla");
+            insertarEvidenciaInicial(db, 4, 4, "documento", "content://labcare/evidencias/reporte_preventivo_osc.pdf", "Reporte preventivo del osciloscopio");
+            insertarEvidenciaInicial(db, 5, 5, "video", "content://labcare/evidencias/impresora_atasco.mp4", "Video del atasco de papel");
         }
 
         private void insertarRolInicial(SQLiteDatabase db, String nombre) {
@@ -763,15 +760,13 @@ public class controlDBLabCare {
             db.insertWithOnConflict("mantenimientos", null, valores, SQLiteDatabase.CONFLICT_IGNORE);
         }
 
-        private void insertarEvidenciaInicial(SQLiteDatabase db, Integer idIncidencia, Integer idMantenimiento,
-                                              int idUsuario, String tipoEvidencia,
+        private void insertarEvidenciaInicial(SQLiteDatabase db, Integer idIncidencia, Integer idMantenimiento, String tipoEvidencia,
                                               String rutaArchivo, String descripcion) {
             ContentValues valores = new ContentValues();
             if (idIncidencia == null) valores.putNull("id_incidencia");
             else valores.put("id_incidencia", idIncidencia);
             if (idMantenimiento == null) valores.putNull("id_mantenimiento");
             else valores.put("id_mantenimiento", idMantenimiento);
-            valores.put("id_usuario", idUsuario);
             valores.put("tipo_evidencia", tipoEvidencia);
             valores.put("ruta_archivo", rutaArchivo);
             valores.put("descripcion", descripcion);
@@ -1911,5 +1906,43 @@ public class controlDBLabCare {
             cursor.close();
         }
         return lista;
+    }
+
+    // MÉTODO NUEVO — Obtener todos los datos relacionados de un mantenimiento para el PDF
+    public Cursor obtenerDatosCompletosMantenimiento(int idMantenimiento) {
+        SQLiteDatabase db = DBHelper.getReadableDatabase();
+        String query =
+                "SELECT " +
+                        "m.id_mantenimiento, " +
+                        "m.tipo_mantenimiento, " +
+                        "m.estado_mantenimiento, " +
+                        "m.diagnostico, " +
+                        "m.solucion_aplicada, " +
+                        "m.fecha_inicio, " +
+                        "m.fecha_fin, " +
+                        "e.nombre AS nombre_equipo, " +
+                        "e.codigo_inventario, " +
+                        "e.marca, " +
+                        "e.modelo, " +
+                        "e.estado_equipo, " +
+                        "l.nombre AS nombre_laboratorio, " +
+                        "l.piso, " +
+                        "ed.nombre AS nombre_edificio, " +
+                        "i.titulo AS titulo_incidencia, " +
+                        "i.descripcion AS descripcion_incidencia, " +
+                        "i.prioridad, " +
+                        "i.fecha_reporte, " +
+                        "uc.nombres || ' ' || uc.apellidos AS nombre_creador, " +
+                        "ut.nombres || ' ' || ut.apellidos AS nombre_tecnico " +
+                        "FROM mantenimientos m " +
+                        "INNER JOIN equipos e ON m.id_equipo = e.id_equipo " +
+                        "INNER JOIN laboratorios l ON e.id_laboratorio = l.id_laboratorio " +
+                        "INNER JOIN edificios ed ON l.id_edificio = ed.id_edificio " +
+                        "LEFT JOIN incidencias i ON m.id_incidencia = i.id_incidencia " +
+                        "INNER JOIN usuarios uc ON m.id_usuario_crea = uc.id_usuario " +
+                        "INNER JOIN usuarios ut ON m.id_usuario_tecnico = ut.id_usuario " +
+                        "WHERE m.id_mantenimiento = ?";
+
+        return db.rawQuery(query, new String[]{String.valueOf(idMantenimiento)});
     }
 }
