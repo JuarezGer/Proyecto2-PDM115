@@ -56,6 +56,9 @@ local.defaults.properties
 # Kotlin / Java generados
 *.class
 
+# Excepciones
+!app/libs/library-1.0.4.aar
+
 # Google Services / Firebase
 # Si usan Firebase, normalmente google-services.json debe compartirse si todos compilan el mismo proyecto.
 # Si contiene claves privadas o usan proyectos separados, NO lo suban y creen un ejemplo.

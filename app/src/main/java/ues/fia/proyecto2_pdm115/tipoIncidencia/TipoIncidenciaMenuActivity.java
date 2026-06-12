@@ -15,10 +15,10 @@ public class TipoIncidenciaMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_tipo_incidencia);
 
-        /*findViewById(R.id.btnCrearTipoIncidencia).setOnClickListener(v -> abrir(CrearTipoIncidenciaActivity.class));
+        findViewById(R.id.btnCrearTipoIncidencia).setOnClickListener(v -> abrir(CrearTipoIncidenciaActivity.class));
         findViewById(R.id.btnVisualizarTipoIncidencia).setOnClickListener(v -> abrir(VisualizarTipoIncidenciaActivity.class));
         findViewById(R.id.btnActualizarTipoIncidencia).setOnClickListener(v -> abrir(ActualizarTipoIncidenciaActivity.class));
-        findViewById(R.id.btnEliminarTipoIncidencia).setOnClickListener(v -> abrir(EliminarTipoIncidenciaActivity.class));*/
+        findViewById(R.id.btnEliminarTipoIncidencia).setOnClickListener(v -> abrir(EliminarTipoIncidenciaActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
         configurarBarraInferior();
     }

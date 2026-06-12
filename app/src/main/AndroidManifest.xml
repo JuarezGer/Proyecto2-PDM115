@@ -4,6 +4,13 @@
 
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -42,7 +49,8 @@
             android:exported="false" />
         <activity
             android:name=".LoginBiometricoActivity"
-            android:exported="false" /> <!-- Submenús CRUD LabCare -->
+            android:exported="false" />
+        <!-- Submenús CRUD LabCare -->
         <activity android:name=".rol.RolMenuActivity" />
         <activity android:name=".categoriaEquipo.CategoriaEquipoMenuActivity" />
         <activity android:name=".edificio.EdificioMenuActivity" />
@@ -56,6 +64,12 @@
         <activity android:name=".mantenimiento.EliminarMantenimientoActivity" />
         <activity android:name=".usuario.UsuarioMenuActivity" />
         <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" />
+
+        <!-- Submenús CRUD LabCare -->
+        <activity android:name=".tipoIncidencia.CrearTipoIncidenciaActivity"/>
+        <activity android:name=".tipoIncidencia.ActualizarTipoIncidenciaActivity"/>
+        <activity android:name=".tipoIncidencia.VisualizarTipoIncidenciaActivity"/>
+        <activity android:name=".tipoIncidencia.EliminarTipoIncidenciaActivity"/>
     </application>
 
 </manifest>
