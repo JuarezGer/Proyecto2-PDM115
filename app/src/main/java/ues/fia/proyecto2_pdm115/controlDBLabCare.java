@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import ues.fia.proyecto2_pdm115.utils.SeguridadUtils;
 
 import java.util.ArrayList;
@@ -201,14 +203,27 @@ public class controlDBLabCare {
         @Override
         public void onCreate(SQLiteDatabase db) {
             try {
+                Log.d("DB", "Inicio onCreate");
+
                 db.beginTransaction();
+
+                Log.d("DB", "Creando tablas");
                 crearTablas(db);
+
+                Log.d("DB", "Creando triggers");
                 crearTriggers(db);
+
+                Log.d("DB", "Insertando datos");
                 llenarDatosIniciales(db);
+
                 db.setTransactionSuccessful();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
+
+                Log.d("DB", "Todo correcto");
+            }
+            catch (Exception e) {
+                Log.e("DB", "ERROR EN onCreate", e);
+            }
+            finally {
                 if (db.inTransaction()) {
                     db.endTransaction();
                 }
@@ -579,7 +594,7 @@ public class controlDBLabCare {
             db.execSQL("CREATE TRIGGER trg_evidencias_bi_tipo " +
                     "BEFORE INSERT ON evidencias " +
                     "FOR EACH ROW " +
-                    "WHEN NEW.tipo_evidencia NOT IN ('foto', 'video', 'audio', 'documento') " +
+                    "WHEN NEW.tipo_evidencia NOT IN ('imagen', 'video', 'audio', 'documento') " +
                     "OR trim(NEW.ruta_archivo) = '' " +
                     "BEGIN " +
                     "SELECT RAISE(ABORT, 'Tipo de evidencia o ruta de archivo no valida'); " +
@@ -588,7 +603,7 @@ public class controlDBLabCare {
             db.execSQL("CREATE TRIGGER trg_evidencias_bu_tipo " +
                     "BEFORE UPDATE ON evidencias " +
                     "FOR EACH ROW " +
-                    "WHEN NEW.tipo_evidencia NOT IN ('foto', 'video', 'audio', 'documento') " +
+                    "WHEN NEW.tipo_evidencia NOT IN ('imagen', 'video', 'audio', 'documento') " +
                     "OR trim(NEW.ruta_archivo) = '' " +
                     "BEGIN " +
                     "SELECT RAISE(ABORT, 'Tipo de evidencia o ruta de archivo no valida'); " +
@@ -649,11 +664,10 @@ public class controlDBLabCare {
             insertarMantenimientoInicial(db, 4, 4, 4, 5, "preventivo", "finalizado", "Revision general completada", "Limpieza y calibracion basica", "2026-06-04 08:30:00", "2026-06-04 10:30:00");
             insertarMantenimientoInicial(db, 5, 5, 1, 2, "correctivo", "pendiente", "Revisar rodillos de impresion", null, "2026-06-05 11:00:00", null);
 
-            insertarEvidenciaInicial(db, 1, 1, "foto", "content://labcare/evidencias/incidencia_1_foto.jpg", "Foto del equipo sin encender");
-            insertarEvidenciaInicial(db, 2, 2, "audio", "content://labcare/evidencias/incidencia_2_audio.m4a", "Audio reportado por voz");
+            /*insertarEvidenciaInicial(db, 1, 1, "foto", "content://labcare/evidencias/incidencia_1_foto.jpg", "Foto del equipo sin encender");
             insertarEvidenciaInicial(db, 3, 3, "foto", "content://labcare/evidencias/router_sin_red.jpg", "Estado del router al reportar falla");
             insertarEvidenciaInicial(db, 4, 4, "documento", "content://labcare/evidencias/reporte_preventivo_osc.pdf", "Reporte preventivo del osciloscopio");
-            insertarEvidenciaInicial(db, 5, 5, "video", "content://labcare/evidencias/impresora_atasco.mp4", "Video del atasco de papel");
+            insertarEvidenciaInicial(db, 5, 5, "video", "content://labcare/evidencias/impresora_atasco.mp4", "Video del atasco de papel");*/
         }
 
         private void insertarRolInicial(SQLiteDatabase db, String nombre) {
@@ -1558,25 +1572,53 @@ public class controlDBLabCare {
     // CRUD EVIDENCIAS
     // =========================================================
 
-    public String insertarEvidencia(Integer idIncidencia, Integer idMantenimiento, int idUsuario,
-                                    String tipoEvidencia, String rutaArchivo, String descripcion) {
+    public String insertarEvidencia(int idMantenimiento, Integer idIncidencia,
+                                    String tipoEvidencia, String rutaArchivo,
+                                    String descripcion) {
         try {
             ContentValues valores = new ContentValues();
+            valores.put("id_mantenimiento", idMantenimiento);
             if (idIncidencia == null) valores.putNull("id_incidencia");
             else valores.put("id_incidencia", idIncidencia);
-            if (idMantenimiento == null) valores.putNull("id_mantenimiento");
-            else valores.put("id_mantenimiento", idMantenimiento);
-            valores.put("id_usuario", idUsuario);
             valores.put("tipo_evidencia", tipoEvidencia);
             valores.put("ruta_archivo", rutaArchivo);
-            valores.put("descripcion", descripcion);
+            if (descripcion == null || descripcion.trim().isEmpty())
+                valores.putNull("descripcion");
+            else valores.put("descripcion", descripcion);
             long resultado = db.insertOrThrow("evidencias", null, valores);
-            return resultado == -1 ? "Error al insertar evidencia." : "Evidencia insertada correctamente.";
+            return resultado == -1 ? "Error al insertar evidencia."
+                    : "Evidencia insertada correctamente.";
         } catch (SQLiteConstraintException e) {
-            return "Error de integridad: Verifique incidencia, mantenimiento, usuario, tipo y ruta. " + e.getMessage();
+            return "Error de integridad: " + e.getMessage();
         } catch (Exception e) {
             return "Error al insertar evidencia: " + e.getMessage();
         }
+    }
+
+    // MÉTODO NUEVO
+    public Cursor obtenerMantenimientosParaSpinner() {
+        SQLiteDatabase db = DBHelper.getReadableDatabase();
+        String query =
+                "SELECT m.id_mantenimiento, " +
+                        "m.tipo_mantenimiento, " +
+                        "m.estado_mantenimiento " +
+                        "FROM mantenimientos m " +
+                        "ORDER BY m.id_mantenimiento DESC";
+        return db.rawQuery(query, null);
+    }
+
+    // MÉTODO NUEVO
+    public Cursor obtenerIncidenciasPorMantenimiento(int idMantenimiento) {
+        SQLiteDatabase db = DBHelper.getReadableDatabase();
+        String query =
+                "SELECT i.id_incidencia, " +
+                        "i.titulo " +
+                        "FROM incidencias i " +
+                        "INNER JOIN equipos e ON i.id_equipo = e.id_equipo " +
+                        "INNER JOIN mantenimientos m ON e.id_equipo = m.id_equipo " +
+                        "WHERE m.id_mantenimiento = ? " +
+                        "ORDER BY i.id_incidencia DESC";
+        return db.rawQuery(query, new String[]{String.valueOf(idMantenimiento)});
     }
 
     public Cursor consultarEvidenciasCursor() {

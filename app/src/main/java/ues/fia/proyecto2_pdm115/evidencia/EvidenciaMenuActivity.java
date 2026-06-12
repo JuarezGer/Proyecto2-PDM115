@@ -15,8 +15,8 @@ public class EvidenciaMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_evidencia);
 
-        /*findViewById(R.id.btnCrearEvidencia).setOnClickListener(v -> abrir(CrearEvidenciaActivity.class));
-        findViewById(R.id.btnVisualizarEvidencia).setOnClickListener(v -> abrir(VisualizarEvidenciaActivity.class));
+        findViewById(R.id.btnCrearEvidencia).setOnClickListener(v -> abrir(InsertarEvidenciaActivity.class));
+        /*findViewById(R.id.btnVisualizarEvidencia).setOnClickListener(v -> abrir(VisualizarEvidenciaActivity.class));
         findViewById(R.id.btnActualizarEvidencia).setOnClickListener(v -> abrir(ActualizarEvidenciaActivity.class));
         findViewById(R.id.btnEliminarEvidencia).setOnClickListener(v -> abrir(EliminarEvidenciaActivity.class));*/
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
