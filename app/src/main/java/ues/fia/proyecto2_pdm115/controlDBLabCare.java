@@ -219,7 +219,8 @@ public class controlDBLabCare {
 
             db.execSQL("CREATE TABLE roles (" +
                     "id_rol INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "nombre TEXT NOT NULL UNIQUE" +
+                    "nombre TEXT NOT NULL UNIQUE," +
+                    "descripcion TEXT" +
                     ");");
 
             db.execSQL("CREATE TABLE usuarios (" +
@@ -597,10 +598,10 @@ public class controlDBLabCare {
 
         private void llenarDatosIniciales(SQLiteDatabase db) {
 
-            insertarRolInicial(db, "Administrador");
-            insertarRolInicial(db, "Tecnico");
-            insertarRolInicial(db, "Reportante");
-            insertarRolInicial(db, "Supervisor");
+            insertarRolInicial(db, "Administrador","Uso de la app");
+            insertarRolInicial(db, "Tecnico","Encargado de mantenimientos");
+            insertarRolInicial(db, "Reportante","Encargado de reportar incidencias");
+            insertarRolInicial(db, "Supervisor","Encargado de mantener control de la app");
 
             insertarUsuarioInicial(db, 1, "Admin", "Sistema", "admin@labcare.com", "admin123", 1, 1);
             insertarUsuarioInicial(db, 2, "Carlos", "Hernandez", "tecnico@labcare.com", "tec123", 1, 1);
@@ -656,9 +657,10 @@ public class controlDBLabCare {
             insertarEvidenciaInicial(db, 5, 5, "video", "content://labcare/evidencias/impresora_atasco.mp4", "Video del atasco de papel");
         }
 
-        private void insertarRolInicial(SQLiteDatabase db, String nombre) {
+        private void insertarRolInicial(SQLiteDatabase db, String nombre, String descripcion) {
             ContentValues valores = new ContentValues();
             valores.put("nombre", nombre);
+            valores.put("descripcion", descripcion);
             db.insertWithOnConflict("roles", null, valores, SQLiteDatabase.CONFLICT_IGNORE);
         }
 
@@ -826,10 +828,11 @@ public class controlDBLabCare {
     // CRUD ROLES
     // =========================================================
 
-    public String insertarRol(String nombre) {
+    public String insertarRol(String nombre, String descripcion) {
         try {
             ContentValues valores = new ContentValues();
             valores.put("nombre", nombre);
+            valores.put("descripcion", descripcion);
             long resultado = db.insertOrThrow("roles", null, valores);
             return resultado == -1 ? "Error al insertar rol." : "Rol insertado correctamente.";
         } catch (SQLiteConstraintException e) {
@@ -843,10 +846,11 @@ public class controlDBLabCare {
         return db.query("roles", null, null, null, null, null, "nombre ASC");
     }
 
-    public String actualizarRol(int idRol, String nombre) {
+    public String actualizarRol(int idRol, String nombre, String descripcion) {
         try {
             ContentValues valores = new ContentValues();
             valores.put("nombre", nombre);
+            valores.put("descripcion", descripcion);
             int filas = db.update("roles", valores, "id_rol = ?", new String[]{String.valueOf(idRol)});
             return filas > 0 ? "Rol actualizado correctamente." : "No se encontró el rol.";
         } catch (SQLiteConstraintException e) {

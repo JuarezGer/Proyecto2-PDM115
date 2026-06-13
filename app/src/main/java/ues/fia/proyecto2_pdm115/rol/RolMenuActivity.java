@@ -15,10 +15,10 @@ public class RolMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_rol);
 
-        /*findViewById(R.id.btnCrearRol).setOnClickListener(v -> abrir(CrearRolActivity.class));
-        findViewById(R.id.btnVisualizarRol).setOnClickListener(v -> abrir(VisualizarRolActivity.class));
+        findViewById(R.id.btnCrearRol).setOnClickListener(v -> abrir(CrearRolActivity.class));
+        findViewById(R.id.btnVisualizarRol).setOnClickListener(v -> abrir(VisualizarRolesActivity.class));
         findViewById(R.id.btnActualizarRol).setOnClickListener(v -> abrir(ActualizarRolActivity.class));
-        findViewById(R.id.btnEliminarRol).setOnClickListener(v -> abrir(EliminarRolActivity.class));*/
+        findViewById(R.id.btnEliminarRol).setOnClickListener(v -> abrir(EliminarRolActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
         configurarBarraInferior();
     }

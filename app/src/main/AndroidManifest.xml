@@ -65,11 +65,17 @@
         <activity android:name=".usuario.UsuarioMenuActivity" />
         <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" />
 
-        <!-- Submenús CRUD LabCare -->
+        <!-- CRUD TipoIncidencia -->
         <activity android:name=".tipoIncidencia.CrearTipoIncidenciaActivity"/>
         <activity android:name=".tipoIncidencia.ActualizarTipoIncidenciaActivity"/>
         <activity android:name=".tipoIncidencia.VisualizarTipoIncidenciaActivity"/>
         <activity android:name=".tipoIncidencia.EliminarTipoIncidenciaActivity"/>
+
+        <!-- CRUD Rol -->
+        <activity android:name=".rol.CrearRolActivity"/>
+        <activity android:name=".rol.ActualizarRolActivity"/>
+        <activity android:name=".rol.VisualizarRolesActivity"/>
+        <activity android:name=".rol.EliminarRolActivity"/>
     </application>
 
 </manifest>

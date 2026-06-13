@@ -186,7 +186,7 @@ public class VisualizarTipoIncidenciaActivity extends AppCompatActivity {
                                 archivoTemporal = new File(carpetaTemporal, nombreArchivo);
                             }
 
-                            guardarArchivoEnDescargas(archivoTemporal, nombreArchivo);
+                            guardarArchivoEnDocumentos(archivoTemporal, nombreArchivo);
                         }
 
                         @Override
@@ -211,7 +211,7 @@ public class VisualizarTipoIncidenciaActivity extends AppCompatActivity {
         }
     }
 
-    private void guardarArchivoEnDescargas(File archivoTemporal, String nombreArchivo) {
+    private void guardarArchivoEnDocumentos(File archivoTemporal, String nombreArchivo) {
         if (archivoTemporal == null || !archivoTemporal.exists()) {
             runOnUiThread(() ->
                     Toast.makeText(
@@ -225,36 +225,40 @@ public class VisualizarTipoIncidenciaActivity extends AppCompatActivity {
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                guardarConMediaStore(archivoTemporal, nombreArchivo);
+                guardarConMediaStoreDocumentos(archivoTemporal, nombreArchivo);
             } else {
-                guardarEnDescargasLegacyConPermiso(archivoTemporal, nombreArchivo);
+                guardarEnDocumentosLegacyConPermiso(archivoTemporal, nombreArchivo);
             }
 
         } catch (Exception e) {
             runOnUiThread(() ->
                     Toast.makeText(
                             this,
-                            "Error al guardar en Descargas: " + e.getMessage(),
+                            "Error al guardar en Documentos: " + e.getMessage(),
                             Toast.LENGTH_LONG
                     ).show()
             );
         }
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    private void guardarConMediaStore(File archivoTemporal, String nombreArchivo) throws Exception {
+    private void guardarConMediaStoreDocumentos(File archivoTemporal, String nombreArchivo) throws Exception {
         ContentResolver resolver = getContentResolver();
 
         ContentValues valores = new ContentValues();
         valores.put(MediaStore.MediaColumns.DISPLAY_NAME, nombreArchivo);
         valores.put(MediaStore.MediaColumns.MIME_TYPE, "application/vnd.ms-excel");
-        valores.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+        valores.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS);
         valores.put(MediaStore.MediaColumns.IS_PENDING, 1);
 
-        Uri uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, valores);
+        Uri uri = resolver.insert(
+                MediaStore.Files.getContentUri("external"),
+                valores
+        );
 
         if (uri == null) {
-            throw new Exception("No se pudo crear el archivo en Descargas.");
+            throw new Exception("No se pudo crear el archivo en Documentos.");
         }
 
         try (
@@ -282,13 +286,13 @@ public class VisualizarTipoIncidenciaActivity extends AppCompatActivity {
         runOnUiThread(() ->
                 Toast.makeText(
                         this,
-                        "Excel guardado en Descargas: " + nombreArchivo,
+                        "Excel guardado en Documentos: " + nombreArchivo,
                         Toast.LENGTH_LONG
                 ).show()
         );
     }
 
-    private void guardarEnDescargasLegacyConPermiso(File archivoTemporal, String nombreArchivo) throws Exception {
+    private void guardarEnDocumentosLegacyConPermiso(File archivoTemporal, String nombreArchivo) throws Exception {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -306,19 +310,20 @@ public class VisualizarTipoIncidenciaActivity extends AppCompatActivity {
             return;
         }
 
-        guardarEnDescargasLegacy(archivoTemporal, nombreArchivo);
+        guardarEnDocumentosLegacy(archivoTemporal, nombreArchivo);
     }
 
-    private void guardarEnDescargasLegacy(File archivoTemporal, String nombreArchivo) throws Exception {
-        File carpetaDescargas = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS
+    private void guardarEnDocumentosLegacy(File archivoTemporal, String nombreArchivo) throws Exception {
+        File carpetaDocumentos = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS
         );
 
-        if (!carpetaDescargas.exists()) {
-            carpetaDescargas.mkdirs();
+
+        if (!carpetaDocumentos.exists()) {
+            carpetaDocumentos.mkdirs();
         }
 
-        File archivoDestino = new File(carpetaDescargas, nombreArchivo);
+        File archivoDestino = new File(carpetaDocumentos, nombreArchivo);
 
         try (
                 FileInputStream inputStream = new FileInputStream(archivoTemporal);
@@ -337,7 +342,7 @@ public class VisualizarTipoIncidenciaActivity extends AppCompatActivity {
         runOnUiThread(() ->
                 Toast.makeText(
                         this,
-                        "Excel guardado en Descargas: " + nombreArchivo,
+                        "Excel guardado en Documentos: " + nombreArchivo,
                         Toast.LENGTH_LONG
                 ).show()
         );
@@ -370,7 +375,7 @@ public class VisualizarTipoIncidenciaActivity extends AppCompatActivity {
                 if (archivoTemporalPendiente != null && nombreArchivoPendiente != null) {
                     new Thread(() -> {
                         try {
-                            guardarEnDescargasLegacy(
+                            guardarEnDocumentosLegacy(
                                     archivoTemporalPendiente,
                                     nombreArchivoPendiente
                             );
@@ -388,7 +393,7 @@ public class VisualizarTipoIncidenciaActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(
                         this,
-                        "Permiso denegado. No se pudo guardar en Descargas.",
+                        "Permiso denegado. No se pudo guardar en Documentos.",
                         Toast.LENGTH_LONG
                 ).show();
             }
