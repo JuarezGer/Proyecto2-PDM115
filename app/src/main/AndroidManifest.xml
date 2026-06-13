@@ -76,6 +76,12 @@
         <activity android:name=".rol.ActualizarRolActivity"/>
         <activity android:name=".rol.VisualizarRolesActivity"/>
         <activity android:name=".rol.EliminarRolActivity"/>
+
+        <!-- CRUD Rol -->
+        <activity android:name=".usuario.ActualizarUsuarioActivity"/>
+        <activity android:name=".usuario.CrearUsuarioActivity"/>
+        <activity android:name=".usuario.VisualizarUsuarioActivity"/>
+        <activity android:name=".usuario.EliminarUsuarioActivity"/>
     </application>
 
 </manifest>

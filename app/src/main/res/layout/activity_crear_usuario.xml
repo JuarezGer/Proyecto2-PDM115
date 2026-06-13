@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue_gray_50">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:background="@drawable/bg_labcare_header"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="22dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Crear usuario"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Registro de acceso al sistema"
+                android:textColor="@color/blue_gray_100"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/txtMensajeCrearUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/blue_gray_700"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rol del usuario"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spRolUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Nombres"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtNombresUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_input"
+                android:hint="Ej. Carlos"
+                android:inputType="textCapWords"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Apellidos"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtApellidosUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_input"
+                android:hint="Ej. Hernández"
+                android:inputType="textCapWords"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Correo"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtCorreoUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_input"
+                android:hint="usuario@labcare.com"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Clave"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtClaveUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_input"
+                android:hint="Clave de acceso"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Usa biometría"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spUsaBiometriaUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Estado"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spActivoUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/btnGuardarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/blue_gray_600"
+                android:text="Guardar"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnLimpiarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/blue_gray_500"
+                android:text="Limpiar"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnVolverCrearUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_labcare_button_secondary"
+                android:text="Volver"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
