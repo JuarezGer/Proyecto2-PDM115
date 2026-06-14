@@ -62,6 +62,7 @@
         <activity android:name=".mantenimiento.CrearMantenimientoActivity" />
         <activity android:name=".mantenimiento.ModificarMantenimientoActivity" />
         <activity android:name=".mantenimiento.EliminarMantenimientoActivity" />
+        <activity android:name=".evidencia.InsertarEvidenciaActivity"/>
         <activity android:name=".usuario.UsuarioMenuActivity" />
         <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" />
 
