@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue_gray_50">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:background="@drawable/bg_labcare_header"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="22dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Actualizar incidencia"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Modificación de datos del reporte"
+                android:textColor="@color/blue_gray_100"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/txtMensajeActualizarIncidencia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/blue_gray_700"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Seleccione la incidencia"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Equipo"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spEquipoIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Usuario que reporta"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spUsuarioReportaIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Tipo de incidencia"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spTipoIncidenciaActualizarIncidencia"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Título"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtTituloIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_input"
+                android:hint="Título de la incidencia"
+                android:inputType="textCapSentences"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Descripción"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtDescripcionIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_input"
+                android:gravity="top"
+                android:hint="Descripción de la falla"
+                android:inputType="textMultiLine|textCapSentences"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Texto original de voz"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtTextoVozOriginalIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_input"
+                android:gravity="top"
+                android:hint="Texto de voz si aplica"
+                android:inputType="textMultiLine|textCapSentences"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Prioridad"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spPrioridadIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Estado"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spEstadoIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Origen"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spOrigenIncidenciaActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <EditText
+                    android:id="@+id/edtLatitudIncidenciaActualizar"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_labcare_input"
+                    android:hint="Latitud"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:padding="12dp"
+                    android:textColor="@color/blue_gray_900"
+                    android:textColorHint="@color/blue_gray_400" />
+
+                <EditText
+                    android:id="@+id/edtLongitudIncidenciaActualizar"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_labcare_input"
+                    android:hint="Longitud"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:padding="12dp"
+                    android:textColor="@color/blue_gray_900"
+                    android:textColorHint="@color/blue_gray_400" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnObtenerUbicacionIncidenciaActualizar"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_labcare_button_secondary"
+                    android:backgroundTint="@null"
+                    android:text="Obtener ubicación GPS"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottieGpsBadgeActualizar"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="Ubicación animada"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/lottie_location" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnActualizarIncidencia"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_labcare_button_primary"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="Actualizar"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnLimpiarActualizarIncidencia"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_labcare_button_secondary"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="Limpiar"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnVolverActualizarIncidencia"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_labcare_button_secondary"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="Volver"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

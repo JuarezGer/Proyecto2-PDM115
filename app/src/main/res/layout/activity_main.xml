@@ -89,12 +89,14 @@
                         android:orientation="vertical"
                         android:padding="8dp">
 
-                        <ImageView
+                        <com.airbnb.lottie.LottieAnimationView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:contentDescription="Equipos"
-                            android:src="@drawable/ic_settings"
-                            app:tint="@color/blue_gray_500" />
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
+                            app:lottie_rawRes="@raw/lottie_icon_settings"
+                            app:lottie_colorFilter="@color/blue_gray_500" />
 
                         <TextView
                             android:id="@+id/txtTotalEquipos"
@@ -126,12 +128,14 @@
                         android:orientation="vertical"
                         android:padding="8dp">
 
-                        <ImageView
+                        <com.airbnb.lottie.LottieAnimationView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:contentDescription="Incidencias"
-                            android:src="@drawable/ic_warning"
-                            app:tint="@color/blue_gray_500" />
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
+                            app:lottie_rawRes="@raw/lottie_icon_warning"
+                            app:lottie_colorFilter="@color/blue_gray_500" />
 
                         <TextView
                             android:id="@+id/txtIncidenciasAbiertas"
@@ -162,12 +166,14 @@
                         android:orientation="vertical"
                         android:padding="8dp">
 
-                        <ImageView
+                        <com.airbnb.lottie.LottieAnimationView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:contentDescription="Mantenimientos"
-                            android:src="@drawable/ic_build"
-                            app:tint="@color/blue_gray_500" />
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
+                            app:lottie_rawRes="@raw/lottie_icon_build"
+                            app:lottie_colorFilter="@color/blue_gray_500" />
 
                         <TextView
                             android:id="@+id/txtMantenimientos"
@@ -225,13 +231,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Roles"
-                                android:src="@drawable/ic_person"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_person"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -271,13 +279,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Usuarios"
-                                android:src="@drawable/ic_group"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_group"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -327,13 +337,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Edificios"
-                                android:src="@drawable/ic_domain"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_domain"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -373,13 +385,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Laboratorios"
-                                android:src="@drawable/ic_domain"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_domain"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -429,13 +443,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Categorías de equipo"
-                                android:src="@drawable/ic_settings"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_settings"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -475,13 +491,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Equipos"
-                                android:src="@drawable/ic_settings"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_settings"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -531,13 +549,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Tipos de incidencia"
-                                android:src="@drawable/ic_warning"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_warning"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -577,13 +597,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Incidencias"
-                                android:src="@drawable/ic_warning"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_warning"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -633,13 +655,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Mantenimientos"
-                                android:src="@drawable/ic_build"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_build"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -679,13 +703,15 @@
                             android:layout_height="42dp"
                             android:background="@drawable/bg_icon_container">
 
-                            <ImageView
+                            <com.airbnb.lottie.LottieAnimationView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="Evidencias"
-                                android:src="@drawable/ic_bar_chart"
-                                app:tint="@color/blue_gray_700" />
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_bar_chart"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
                         </FrameLayout>
 
                         <TextView
@@ -707,56 +733,108 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Fila 6: Reportes y gráficos -->
+                <!-- Fila 6: Reportes y mapas -->
                 <LinearLayout
-                    android:id="@+id/cardReportes"
                     android:layout_width="match_parent"
-                    android:layout_height="116dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/bg_card"
-                    android:clickable="true"
-                    android:elevation="4dp"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:gravity="center_vertical"
+                    android:baselineAligned="false"
                     android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <FrameLayout
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/bg_icon_container">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="Reportes"
-                            android:src="@drawable/ic_bar_chart"
-                            app:tint="@color/blue_gray_700" />
-                    </FrameLayout>
+                    android:weightSum="2">
 
                     <LinearLayout
+                        android:id="@+id/cardReportes"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
+                        android:layout_height="124dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:background="@drawable/bg_card"
+                        android:clickable="true"
+                        android:elevation="4dp"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_icon_container">
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="Reportes"
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_bar_chart"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
+                        </FrameLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
                             android:text="Reportes y gráficos"
                             android:textColor="@color/blue_gray_900"
-                            android:textSize="17sp"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="Estadísticas de incidencias, mantenimientos y exportación PDF"
+                            android:layout_marginTop="3dp"
+                            android:text="Estadísticas y PDF"
+                            android:textColor="@color/blue_gray_400"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/cardMapas"
+                        android:layout_width="0dp"
+                        android:layout_height="124dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_card"
+                        android:clickable="true"
+                        android:elevation="4dp"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_icon_container">
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="Mapas"
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/lottie_icon_map"
+                                app:lottie_colorFilter="@color/blue_gray_700" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Mapas"
+                            android:textColor="@color/blue_gray_900"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="Ubicación GPS"
                             android:textColor="@color/blue_gray_400"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -805,12 +883,14 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Inicio"
-                android:src="@drawable/ic_home"
-                app:tint="@color/white" />
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/lottie_icon_home"
+                app:lottie_colorFilter="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -832,12 +912,14 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Equipos"
-                android:src="@drawable/ic_settings"
-                app:tint="@color/blue_gray_100" />
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/lottie_icon_settings"
+                app:lottie_colorFilter="@color/blue_gray_100" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -859,12 +941,14 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Reportes"
-                android:src="@drawable/ic_bar_chart"
-                app:tint="@color/blue_gray_100" />
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/lottie_icon_bar_chart"
+                app:lottie_colorFilter="@color/blue_gray_100" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -886,12 +970,14 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.airbnb.lottie.LottieAnimationView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Usuarios"
-                android:src="@drawable/ic_person"
-                app:tint="@color/blue_gray_100" />
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/lottie_icon_person"
+                app:lottie_colorFilter="@color/blue_gray_100" />
 
             <TextView
                 android:layout_width="wrap_content"
