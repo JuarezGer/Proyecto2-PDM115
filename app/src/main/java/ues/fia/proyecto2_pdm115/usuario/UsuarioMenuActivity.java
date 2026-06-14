@@ -14,10 +14,10 @@ public class UsuarioMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_usuario);
 
-        /*findViewById(R.id.btnCrearUsuario).setOnClickListener(v -> abrir(CrearUsuarioActivity.class));
+        findViewById(R.id.btnCrearUsuario).setOnClickListener(v -> abrir(CrearUsuarioActivity.class));
         findViewById(R.id.btnVisualizarUsuario).setOnClickListener(v -> abrir(VisualizarUsuarioActivity.class));
         findViewById(R.id.btnActualizarUsuario).setOnClickListener(v -> abrir(ActualizarUsuarioActivity.class));
-        findViewById(R.id.btnEliminarUsuario).setOnClickListener(v -> abrir(EliminarUsuarioActivity.class));*/
+        findViewById(R.id.btnEliminarUsuario).setOnClickListener(v -> abrir(EliminarUsuarioActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
         configurarBarraInferior();
     }

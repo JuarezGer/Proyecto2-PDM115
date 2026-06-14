@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue_gray_50">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:background="@drawable/bg_labcare_header"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="22dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Actualizar usuario"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Seleccione un usuario y modifique sus datos"
+                android:textColor="@color/blue_gray_100"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/txtMensajeActualizarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/blue_gray_700"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Seleccione el usuario"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spUsuarioActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Rol"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spRolUsuarioActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Nombres"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtNombresUsuarioActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:hint="Nombres del usuario"
+                android:inputType="textCapWords"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Apellidos"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtApellidosUsuarioActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:hint="Apellidos del usuario"
+                android:inputType="textCapWords"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Correo"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtCorreoUsuarioActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:hint="correo@labcare.com"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Nueva clave"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtClaveUsuarioActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:hint="Dejar vacío para conservar la clave"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:textColor="@color/blue_gray_900"
+                android:textColorHint="@color/blue_gray_400" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Usa biometría"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spUsaBiometriaUsuarioActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Estado"
+                android:textColor="@color/blue_gray_900"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spActivoUsuarioActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/btnActualizarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/blue_gray_600"
+                android:text="Actualizar"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnLimpiarActualizarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/blue_gray_500"
+                android:text="Limpiar"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnVolverActualizarUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_labcare_button_secondary"
+                android:text="Volver"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
