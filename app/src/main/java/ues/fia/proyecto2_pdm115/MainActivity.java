@@ -14,6 +14,7 @@ import ues.fia.proyecto2_pdm115.evidencia.EvidenciaMenuActivity;
 import ues.fia.proyecto2_pdm115.indicencia.IncidenciaMenuActivity;
 import ues.fia.proyecto2_pdm115.laboratorio.LaboratorioMenuActivity;
 import ues.fia.proyecto2_pdm115.mantenimiento.MantenimientoMenuActivity;
+import ues.fia.proyecto2_pdm115.reporte.ReportesMenuActivity;
 import ues.fia.proyecto2_pdm115.rol.RolMenuActivity;
 import ues.fia.proyecto2_pdm115.tipoIncidencia.TipoIncidenciaMenuActivity;
 import ues.fia.proyecto2_pdm115.usuario.UsuarioMenuActivity;
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.cardIncidencias).setOnClickListener(v -> abrirMenu(IncidenciaMenuActivity.class));
         findViewById(R.id.cardMantenimientos).setOnClickListener(v -> abrirMenu(MantenimientoMenuActivity.class));
         findViewById(R.id.cardEvidencias).setOnClickListener(v -> abrirMenu(EvidenciaMenuActivity.class));
+        findViewById(R.id.cardReportes).setOnClickListener(v -> abrirMenu(ReportesMenuActivity.class));
 
         findViewById(R.id.btnCerrarSesion).setOnClickListener(v -> {
             sessionManager.cerrarSesion();

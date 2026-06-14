@@ -83,6 +83,12 @@
         <activity android:name=".usuario.CrearUsuarioActivity"/>
         <activity android:name=".usuario.VisualizarUsuarioActivity"/>
         <activity android:name=".usuario.EliminarUsuarioActivity"/>
+
+        <!-- Reportes -->
+        <activity android:name=".reporte.ReportesMenuActivity"/>
+        <activity android:name=".reporte.GraficosIncidenciasActivity"/>
+        <activity android:name=".reporte.GraficosMantenimientosActivity"/>
+        <activity android:name=".reporte.VisualizarReporteGeneralActivity"/>
     </application>
 
 </manifest>
