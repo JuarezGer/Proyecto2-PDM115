@@ -15,6 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyecto2PDM115">
         <activity
+            android:name=".evidencia.DetalleEvidenciaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".evidencia.ListaEvidenciasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".evidencia.EliminarEvidenciaActivity"
+            android:exported="false" />
+        <activity
             android:name=".mantenimiento.ConsultarMantenimientoActivity"
             android:exported="false" />
 
@@ -54,7 +63,7 @@
         <activity android:name=".mantenimiento.CrearMantenimientoActivity" />
         <activity android:name=".mantenimiento.ModificarMantenimientoActivity" />
         <activity android:name=".mantenimiento.EliminarMantenimientoActivity" />
-        <activity android:name=".evidencia.InsertarEvidenciaActivity"/>
+        <activity android:name=".evidencia.InsertarEvidenciaActivity" />
         <activity android:name=".usuario.UsuarioMenuActivity" />
         <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" />
     </application>

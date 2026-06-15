@@ -13,6 +13,8 @@ import ues.fia.proyecto2_pdm115.utils.SeguridadUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class controlDBLabCare {
 
@@ -1678,16 +1680,7 @@ public class controlDBLabCare {
         }
     }
 
-    public String eliminarEvidencia(int idEvidencia) {
-        try {
-            int filas = db.delete("evidencias", "id_evidencia = ?", new String[]{String.valueOf(idEvidencia)});
-            return filas > 0 ? "Evidencia eliminada correctamente." : "No se encontró la evidencia.";
-        } catch (SQLiteConstraintException e) {
-            return "No se puede eliminar la evidencia porque tiene registros relacionados.";
-        } catch (Exception e) {
-            return "Error al eliminar evidencia: " + e.getMessage();
-        }
-    }
+
 
     public Cursor consultarEvidenciasPorIncidenciaCursor(int idIncidencia) {
         return db.rawQuery(
@@ -1986,5 +1979,39 @@ public class controlDBLabCare {
                         "WHERE m.id_mantenimiento = ?";
 
         return db.rawQuery(query, new String[]{String.valueOf(idMantenimiento)});
+    }
+
+    // Obtener todas las evidencias
+    public List<Map<String, String>> obtenerEvidencias() {
+        List<Map<String, String>> lista = new ArrayList<>();
+        Cursor cursor = db.rawQuery(
+                "SELECT e.id_evidencia, e.tipo_evidencia, e.descripcion, " +
+                        "e.ruta_archivo, e.fecha_registro, " +
+                        "e.id_incidencia, e.id_mantenimiento " +
+                        "FROM evidencias e " +
+                        "ORDER BY e.fecha_registro DESC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Map<String, String> fila = new HashMap<>();
+                fila.put("id_evidencia",    cursor.getString(0));
+                fila.put("tipo_evidencia",  cursor.getString(1));
+                fila.put("descripcion",     cursor.getString(2));
+                fila.put("ruta_archivo",    cursor.getString(3));
+                fila.put("fecha_registro",  cursor.getString(4));
+                fila.put("id_incidencia",   cursor.getString(5));
+                fila.put("id_mantenimiento",cursor.getString(6));
+                lista.add(fila);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return lista;
+    }
+
+    // Eliminar una evidencia por ID
+    public boolean eliminarEvidencia(int idEvidencia) {
+        int filas = db.delete("evidencias", "id_evidencia = ?",
+                new String[]{String.valueOf(idEvidencia)});
+        return filas > 0;
     }
 }
