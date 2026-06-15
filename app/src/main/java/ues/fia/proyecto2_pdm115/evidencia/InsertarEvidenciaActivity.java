@@ -95,7 +95,7 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
         launcherCamara = registerForActivityResult(
                 new ActivityResultContracts.TakePicture(), success -> {
                     if (success && uriFotoActual != null) {
-                        rutaArchivoFinal = getRutaDesdeUri(uriFotoActual);
+                        rutaArchivoFinal = copiarImagenAAlmacenamientoInterno(uriFotoActual);
                         imgPreview.setImageURI(uriFotoActual);
                         imgPreview.setVisibility(android.view.View.VISIBLE);
                     } else {
@@ -108,7 +108,7 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
         launcherGaleria = registerForActivityResult(
                 new ActivityResultContracts.GetContent(), uri -> {
                     if (uri != null) {
-                        rutaArchivoFinal = getRutaDesdeUri(uri);
+                        rutaArchivoFinal = copiarImagenAAlmacenamientoInterno(uri);
                         imgPreview.setImageURI(uri);
                         imgPreview.setVisibility(android.view.View.VISIBLE);
                     } else {
@@ -306,6 +306,25 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
             }
         } finally {
             db.cerrar();
+        }
+    }
+
+    private String copiarImagenAAlmacenamientoInterno(Uri uri) {
+        try {
+            File dir = new File(getFilesDir(), "evidencias");
+            if (!dir.exists()) dir.mkdirs();
+            String nombre = "EVD_" + System.currentTimeMillis() + ".jpg";
+            File destino = new File(dir, nombre);
+            java.io.InputStream in = getContentResolver().openInputStream(uri);
+            java.io.FileOutputStream out = new java.io.FileOutputStream(destino);
+            byte[] buffer = new byte[4096];
+            int len;
+            while ((len = in.read(buffer)) != -1) out.write(buffer, 0, len);
+            in.close();
+            out.close();
+            return destino.getAbsolutePath(); // ruta permanente
+        } catch (Exception e) {
+            return null;
         }
     }
 }
