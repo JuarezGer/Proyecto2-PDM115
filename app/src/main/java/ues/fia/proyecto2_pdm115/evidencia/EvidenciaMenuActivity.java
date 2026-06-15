@@ -17,7 +17,7 @@ public class EvidenciaMenuActivity extends Activity {
 
         findViewById(R.id.btnCrearEvidencia).setOnClickListener(v -> abrir(InsertarEvidenciaActivity.class));
         findViewById(R.id.btnVisualizarEvidencia).setOnClickListener(v -> abrir(ListaEvidenciasActivity.class));
-        /*findViewById(R.id.btnActualizarEvidencia).setOnClickListener(v -> abrir(ActualizarEvidenciaActivity.class));*/
+        findViewById(R.id.btnActualizarEvidencia).setOnClickListener(v -> abrir(SeleccionarEvidenciaActivity.class));
         findViewById(R.id.btnEliminarEvidencia).setOnClickListener(v -> abrir(EliminarEvidenciaActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
         configurarBarraInferior();

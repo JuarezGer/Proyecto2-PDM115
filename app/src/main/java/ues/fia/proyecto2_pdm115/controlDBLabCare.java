@@ -1638,25 +1638,39 @@ public class controlDBLabCare {
         );
     }
 
-    public HashMap<String, String> consultarEvidencia(int idEvidencia) {
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery(
-                    "SELECT ev.*, i.titulo AS incidencia, m.tipo_mantenimiento AS mantenimiento, " +
-                            "u.nombres || ' ' || u.apellidos AS usuario " +
-                            "FROM evidencias ev " +
-                            "LEFT JOIN incidencias i ON i.id_incidencia = ev.id_incidencia " +
-                            "LEFT JOIN mantenimientos m ON m.id_mantenimiento = ev.id_mantenimiento " +
-                            "INNER JOIN usuarios u ON u.id_usuario = ev.id_usuario " +
-                            "WHERE ev.id_evidencia = ?",
-                    new String[]{String.valueOf(idEvidencia)}
-            );
-            if (cursor.moveToFirst()) return cursorAMap(cursor);
-            return null;
-        } finally {
-            if (cursor != null) cursor.close();
+    // MÉTODO NUEVO — Obtener una evidencia por su ID
+    public Cursor consultarEvidencia(int idEvidencia) {
+        SQLiteDatabase db = DBHelper.getReadableDatabase();
+        String query = "SELECT * FROM evidencias WHERE id_evidencia = ?";
+        return db.rawQuery(query, new String[]{String.valueOf(idEvidencia)});
+    }
+
+    // MÉTODO NUEVO — Actualizar la evidencia
+    public String actualizarEvidencia(int idEvidencia, int idMantenimiento, Integer idIncidencia, String rutaArchivo, String descripcion) {
+        SQLiteDatabase db = DBHelper.getWritableDatabase();
+        ContentValues valores = new ContentValues();
+
+        valores.put("id_mantenimiento", idMantenimiento);
+
+        if (idIncidencia != null) {
+            valores.put("id_incidencia", idIncidencia);
+        } else {
+            valores.putNull("id_incidencia");
+        }
+
+        // Asumiendo que el tipo_evidencia no cambia, pero si necesitas cambiarlo, agrégalo aquí.
+        valores.put("ruta_archivo", rutaArchivo);
+        valores.put("descripcion", descripcion);
+
+        int filasAfectadas = db.update("evidencias", valores, "id_evidencia = ?", new String[]{String.valueOf(idEvidencia)});
+
+        if (filasAfectadas > 0) {
+            return "Evidencia actualizada correctamente";
+        } else {
+            return "Error al actualizar la evidencia";
         }
     }
+
 
     public String actualizarEvidencia(int idEvidencia, Integer idIncidencia, Integer idMantenimiento,
                                       int idUsuario, String tipoEvidencia,

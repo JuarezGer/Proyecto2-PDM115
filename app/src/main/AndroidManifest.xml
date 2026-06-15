@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyecto2PDM115">
         <activity
+            android:name=".evidencia.ModificarEvidenciaActivity"
+            android:exported="false" />
+        <activity
             android:name=".evidencia.DetalleEvidenciaActivity"
             android:exported="false" />
         <activity
@@ -22,6 +25,8 @@
             android:exported="false" />
         <activity
             android:name=".evidencia.EliminarEvidenciaActivity"
+            android:exported="false" />
+        <activity android:name=".evidencia.SeleccionarEvidenciaActivity"
             android:exported="false" />
         <activity
             android:name=".mantenimiento.ConsultarMantenimientoActivity"
