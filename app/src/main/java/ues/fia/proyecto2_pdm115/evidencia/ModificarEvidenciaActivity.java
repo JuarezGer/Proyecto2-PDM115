@@ -1,4 +1,4 @@
-package ues.fia.proyecto2_pdm115.evidencia;
+package ues.fia.proyecto2_pdm115.evidencia; // Ajusta al paquete real
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class InsertarEvidenciaActivity extends AppCompatActivity {
+public class ModificarEvidenciaActivity extends AppCompatActivity {
 
     // Vistas
     private Spinner spinnerMantenimiento, spinnerIncidencia;
@@ -44,9 +44,11 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
     private List<Integer> listaIdMantenimientos = new ArrayList<>();
     private List<Integer> listaIdIncidencias = new ArrayList<>();
 
-    // Archivo capturado
+    // Estado actual
+    private int idEvidenciaActual = -1;
     private Uri uriFotoActual;
     private String rutaArchivoFinal;
+    private boolean programmaticallySelectingSpinner = false;
 
     // Controlador BD
     private controlDBLabCare db;
@@ -58,7 +60,15 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_insertar_evidencia);
+        setContentView(R.layout.activity_modificar_evidencia); // Asegúrate de usar el XML correcto
+
+        // Recibir el ID de la evidencia a modificar
+        idEvidenciaActual = getIntent().getIntExtra("id_evidencia", -1);
+        if (idEvidenciaActual == -1) {
+            Toast.makeText(this, "Error: No se recibió ID de la evidencia", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         db = new controlDBLabCare(this);
 
@@ -67,6 +77,9 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
         configurarLaunchers();
         cargarSpinnerMantenimientos();
         configurarListeners();
+
+        // Cargar los datos de la evidencia existente
+        cargarDatosEvidencia();
     }
 
     private void vincularVistas() {
@@ -88,39 +101,69 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
     }
 
     // =========================================================
-    // LAUNCHERS
+    // CARGA DE DATOS EXISTENTES
     // =========================================================
 
-    private void configurarLaunchers() {
-        launcherCamara = registerForActivityResult(
-                new ActivityResultContracts.TakePicture(), success -> {
-                    if (success && uriFotoActual != null) {
-                        rutaArchivoFinal = copiarImagenAAlmacenamientoInterno(uriFotoActual);
-                        imgPreview.setImageURI(uriFotoActual);
-                        imgPreview.setVisibility(android.view.View.VISIBLE);
-                    } else {
-                        Toast.makeText(this,
-                                "No se capturó ninguna foto",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private void cargarDatosEvidencia() {
+        try {
+            db.abrir();
+            Cursor c = db.consultarEvidencia(idEvidenciaActual);
+            if (c != null && c.moveToFirst()) {
 
-        launcherGaleria = registerForActivityResult(
-                new ActivityResultContracts.GetContent(), uri -> {
-                    if (uri != null) {
-                        rutaArchivoFinal = copiarImagenAAlmacenamientoInterno(uri);
-                        imgPreview.setImageURI(uri);
+                int idMantenimiento = c.getInt(c.getColumnIndexOrThrow("id_mantenimiento"));
+                int idIncidencia = -1;
+                if (!c.isNull(c.getColumnIndexOrThrow("id_incidencia"))) {
+                    idIncidencia = c.getInt(c.getColumnIndexOrThrow("id_incidencia"));
+                }
+
+                rutaArchivoFinal = c.getString(c.getColumnIndexOrThrow("ruta_archivo"));
+                String descripcion = c.getString(c.getColumnIndexOrThrow("descripcion"));
+
+                // 1. Llenar descripción
+                editDescripcion.setText(descripcion);
+
+                // 2. Mostrar imagen
+                // 2. Mostrar imagen
+                if (rutaArchivoFinal != null && !rutaArchivoFinal.isEmpty()) {
+                    File imgFile = new File(rutaArchivoFinal);
+                    if (imgFile.exists()) {
+                        imgPreview.setImageURI(Uri.fromFile(imgFile));
                         imgPreview.setVisibility(android.view.View.VISIBLE);
                     } else {
                         Toast.makeText(this,
-                                "No se seleccionó ningún archivo",
+                                "No se encontró el archivo de imagen",
                                 Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+
+                // 3. Posicionar Spinner Mantenimiento
+                programmaticallySelectingSpinner = true; // Evitar que el listener borre la incidencia
+                for (int i = 0; i < listaIdMantenimientos.size(); i++) {
+                    if (listaIdMantenimientos.get(i) == idMantenimiento) {
+                        spinnerMantenimiento.setSelection(i);
+                        break;
+                    }
+                }
+
+                // 4. Cargar incidencias de ese mantenimiento y posicionar Spinner Incidencia
+                cargarSpinnerIncidencias(idMantenimiento);
+                for (int i = 0; i < listaIdIncidencias.size(); i++) {
+                    if (listaIdIncidencias.get(i) == idIncidencia) {
+                        spinnerIncidencia.setSelection(i);
+                        break;
+                    }
+                }
+                programmaticallySelectingSpinner = false;
+
+                c.close();
+            }
+        } finally {
+            db.cerrar();
+        }
     }
 
     // =========================================================
-    // SPINNERS
+    // SPINNERS (Modificado para la actualización)
     // =========================================================
 
     private void cargarSpinnerMantenimientos() {
@@ -134,12 +177,9 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
             Cursor cursor = db.obtenerMantenimientosParaSpinner();
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    int id = cursor.getInt(
-                            cursor.getColumnIndexOrThrow("id_mantenimiento"));
-                    String tipo = cursor.getString(
-                            cursor.getColumnIndexOrThrow("tipo_mantenimiento"));
-                    String estado = cursor.getString(
-                            cursor.getColumnIndexOrThrow("estado_mantenimiento"));
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("id_mantenimiento"));
+                    String tipo = cursor.getString(cursor.getColumnIndexOrThrow("tipo_mantenimiento"));
+                    String estado = cursor.getString(cursor.getColumnIndexOrThrow("estado_mantenimiento"));
                     etiquetas.add("#" + id + " — " + tipo + " (" + estado + ")");
                     listaIdMantenimientos.add(id);
                 }
@@ -149,33 +189,27 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
             db.cerrar();
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, etiquetas);
-        adapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, etiquetas);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMantenimiento.setAdapter(adapter);
 
-        // Primera opción deshabilitada
-        spinnerMantenimiento.setOnItemSelectedListener(
-                new android.widget.AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(
-                            android.widget.AdapterView<?> parent,
-                            android.view.View view, int position, long id) {
-                        if (position == 0) {
-                            cargarSpinnerIncidencias(-1);
-                        } else {
-                            int idMantenimiento = listaIdMantenimientos.get(position);
-                            cargarSpinnerIncidencias(idMantenimiento);
-                        }
+        spinnerMantenimiento.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
+                // Solo recargamos las incidencias si el usuario está interactuando
+                if (!programmaticallySelectingSpinner) {
+                    if (position == 0) {
+                        cargarSpinnerIncidencias(-1);
+                    } else {
+                        int idMantenimiento = listaIdMantenimientos.get(position);
+                        cargarSpinnerIncidencias(idMantenimiento);
                     }
-                    @Override
-                    public void onNothingSelected(
-                            android.widget.AdapterView<?> parent) {}
-                });
+                }
+            }
 
-        // Cargar incidencias vacío por defecto
-        cargarSpinnerIncidencias(-1);
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+        });
     }
 
     private void cargarSpinnerIncidencias(int idMantenimiento) {
@@ -187,14 +221,11 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
         if (idMantenimiento != -1) {
             try {
                 db.abrir();
-                Cursor cursor = db.obtenerIncidenciasPorMantenimiento(
-                        idMantenimiento);
+                Cursor cursor = db.obtenerIncidenciasPorMantenimiento(idMantenimiento);
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
-                        int id = cursor.getInt(
-                                cursor.getColumnIndexOrThrow("id_incidencia"));
-                        String titulo = cursor.getString(
-                                cursor.getColumnIndexOrThrow("titulo"));
+                        int id = cursor.getInt(cursor.getColumnIndexOrThrow("id_incidencia"));
+                        String titulo = cursor.getString(cursor.getColumnIndexOrThrow("titulo"));
                         etiquetas.add("#" + id + " — " + titulo);
                         listaIdIncidencias.add(id);
                     }
@@ -205,20 +236,42 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
             }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, etiquetas);
-        adapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, etiquetas);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerIncidencia.setAdapter(adapter);
     }
 
     // =========================================================
-    // LISTENERS
+    // LAUNCHERS Y LISTENERS (Igual que en Inserción)
     // =========================================================
+
+    private void configurarLaunchers() {
+        launcherCamara = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(), success -> {
+                    if (success && uriFotoActual != null) {
+                        rutaArchivoFinal = copiarImagenAAlmacenamientoInterno(uriFotoActual);
+                        imgPreview.setImageURI(uriFotoActual);
+                        imgPreview.setVisibility(android.view.View.VISIBLE);
+                    } else {
+                        Toast.makeText(this, "No se capturó ninguna foto", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        launcherGaleria = registerForActivityResult(
+                new ActivityResultContracts.GetContent(), uri -> {
+                    if (uri != null) {
+                        rutaArchivoFinal = copiarImagenAAlmacenamientoInterno(uri);
+                        imgPreview.setImageURI(uri);
+                        imgPreview.setVisibility(android.view.View.VISIBLE);
+                    } else {
+                        Toast.makeText(this, "No se seleccionó ningún archivo", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
     private void configurarListeners() {
         btnCapturarArchivo.setOnClickListener(v -> mostrarDialogoCaptura());
-        btnGuardar.setOnClickListener(v -> validarYGuardar());
+        btnGuardar.setOnClickListener(v -> validarYActualizar());
         btnCancelar.setOnClickListener(v -> finish());
     }
 
@@ -236,13 +289,10 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
     private void abrirCamara() {
         try {
             File foto = crearArchivoTemporal();
-            uriFotoActual = FileProvider.getUriForFile(this,
-                    getPackageName() + ".fileprovider", foto);
+            uriFotoActual = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", foto);
             launcherCamara.launch(uriFotoActual);
         } catch (IOException e) {
-            Toast.makeText(this,
-                    "Error al crear archivo de foto",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al crear archivo de foto", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -251,8 +301,7 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
     }
 
     private File crearArchivoTemporal() throws IOException {
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile("EVD_" + timestamp, ".jpg", dir);
     }
@@ -262,42 +311,38 @@ public class InsertarEvidenciaActivity extends AppCompatActivity {
     }
 
     // =========================================================
-    // VALIDACIÓN Y GUARDADO
+    // VALIDACIÓN Y ACTUALIZACIÓN
     // =========================================================
 
-    private void validarYGuardar() {
+    private void validarYActualizar() {
         int posMantenimiento = spinnerMantenimiento.getSelectedItemPosition();
         if (posMantenimiento == 0) {
-            Toast.makeText(this,
-                    "Selecciona un mantenimiento",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Selecciona un mantenimiento", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (rutaArchivoFinal == null || rutaArchivoFinal.isEmpty()) {
-            Toast.makeText(this,
-                    "Debes capturar o seleccionar un archivo de evidencia",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Debes capturar o seleccionar un archivo de evidencia", Toast.LENGTH_SHORT).show();
             return;
         }
 
         int idMantenimiento = listaIdMantenimientos.get(posMantenimiento);
         int posIncidencia = spinnerIncidencia.getSelectedItemPosition();
-        Integer idIncidencia = listaIdIncidencias.get(posIncidencia) == -1
-                ? null : listaIdIncidencias.get(posIncidencia);
+        Integer idIncidencia = listaIdIncidencias.get(posIncidencia) == -1 ? null : listaIdIncidencias.get(posIncidencia);
 
-        String descripcion = editDescripcion.getText() != null
-                ? editDescripcion.getText().toString().trim() : "";
+        String descripcion = editDescripcion.getText() != null ? editDescripcion.getText().toString().trim() : "";
 
         try {
             db.abrir();
-            String resultado = db.insertarEvidencia(
+            // LLAMAMOS AL NUEVO MÉTODO DE ACTUALIZAR
+            String resultado = db.actualizarEvidencia(
+                    idEvidenciaActual,
                     idMantenimiento,
                     idIncidencia,
-                    "imagen",
                     rutaArchivoFinal,
                     descripcion.isEmpty() ? null : descripcion
             );
+
             if (resultado.contains("correctamente")) {
                 Toast.makeText(this, resultado, Toast.LENGTH_SHORT).show();
                 finish();
