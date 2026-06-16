@@ -14,10 +14,10 @@ public class IncidenciaMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_incidencia);
 
-        /*findViewById(R.id.btnCrearIncidencia).setOnClickListener(v -> abrir(CrearIncidenciaActivity.class));
+        findViewById(R.id.btnCrearIncidencia).setOnClickListener(v -> abrir(CrearIncidenciaActivity.class));
         findViewById(R.id.btnVisualizarIncidencia).setOnClickListener(v -> abrir(VisualizarIncidenciaActivity.class));
         findViewById(R.id.btnActualizarIncidencia).setOnClickListener(v -> abrir(ActualizarIncidenciaActivity.class));
-        findViewById(R.id.btnEliminarIncidencia).setOnClickListener(v -> abrir(EliminarIncidenciaActivity.class));*/
+        findViewById(R.id.btnEliminarIncidencia).setOnClickListener(v -> abrir(EliminarIncidenciaActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
         configurarBarraInferior();
     }

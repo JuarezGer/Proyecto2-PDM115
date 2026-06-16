@@ -6,13 +6,6 @@
     android:background="@color/blue_gray_50"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:title="Consultar Roles" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="130dp"
@@ -26,16 +19,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Roles"
+            android:text="Visualizar incidencias"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/txtTotalIncidencias"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Listado de roles registrados"
+            android:text="Total: 0"
             android:textColor="@color/blue_gray_100"
             android:textSize="14sp" />
     </LinearLayout>
@@ -47,27 +41,39 @@
         android:orientation="vertical"
         android:padding="18dp">
 
-        <ScrollView
+        <TextView
+            android:id="@+id/txtMensajeVisualizarIncidencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/blue_gray_700"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Toque una incidencia para ver el detalle, leerla en voz alta o exportarla a PDF."
+            android:textColor="@color/blue_gray_600"
+            android:textSize="13sp" />
+
+        <ListView
+            android:id="@+id/listIncidencias"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@drawable/bg_labcare_card"
-            android:padding="14dp">
-
-            <TextView
-                android:id="@+id/txtRoles"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blue_gray_900"
-                android:textSize="15sp" />
-        </ScrollView>
+            android:divider="@color/blue_gray_100"
+            android:dividerHeight="1dp"
+            android:padding="8dp" />
 
         <Button
-            android:id="@+id/btnActualizarListaRoles"
+            android:id="@+id/btnActualizarListaIncidencia"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="12dp"
-            android:background="@drawable/bg_button_primary"
+            android:background="@drawable/bg_labcare_button_primary"
             android:backgroundTint="@null"
             app:backgroundTint="@null"
             android:text="Actualizar lista"
@@ -75,11 +81,11 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btnVolverConsultarRoles"
+            android:id="@+id/btnVolverVisualizarIncidencia"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bg_button_secondary"
+            android:background="@drawable/bg_labcare_button_secondary"
             android:backgroundTint="@null"
             app:backgroundTint="@null"
             android:text="Volver"

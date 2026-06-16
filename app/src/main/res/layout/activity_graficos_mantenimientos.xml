@@ -10,13 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:title="Eliminar Rol" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="130dp"
@@ -30,16 +23,17 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Eliminar rol"
+                android:text="Gráficos de mantenimientos"
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/txtTotalMantenimientosGraficos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Seleccione un rol antes de eliminar"
+                android:text="Total de mantenimientos: 0"
                 android:textColor="@color/blue_gray_100"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -48,60 +42,103 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="18dp">
 
             <TextView
+                android:id="@+id/txtMensajeGraficosMantenimientos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Seleccione el rol"
-                android:textColor="@color/blue_gray_900"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spRoles"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_input"
-                android:padding="10dp" />
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/blue_gray_700"
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <TextView
-                android:id="@+id/txtDetalleRol"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/bg_labcare_card"
-                android:padding="14dp"
-                android:text="Seleccione un rol para ver su información."
+                android:text="Mantenimientos por estado"
                 android:textColor="@color/blue_gray_900"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/btnEliminarRol"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_button_danger"
-                android:backgroundTint="@null"
-                app:backgroundTint="@null"
-                android:text="Eliminar"
-                android:textColor="@color/white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chartMantenimientosEstado"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_card"
+                android:padding="8dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Mantenimientos por tipo"
+                android:textColor="@color/blue_gray_900"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chartMantenimientosTipo"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_card"
+                android:padding="8dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Mantenimientos por técnico"
+                android:textColor="@color/blue_gray_900"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chartMantenimientosTecnico"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_card"
+                android:padding="8dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Mantenimientos por equipo"
+                android:textColor="@color/blue_gray_900"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chartMantenimientosEquipo"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_labcare_card"
+                android:padding="8dp" />
+
+
             <Button
-                android:id="@+id/btnLimpiarRol"
+                android:id="@+id/btnActualizarGraficosMantenimientos"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="18dp"
                 android:background="@drawable/bg_button_primary"
                 android:backgroundTint="@null"
                 app:backgroundTint="@null"
-                android:text="Limpiar"
+                android:text="Actualizar gráficos"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/btnVolverEliminarRol"
+                android:id="@+id/btnVolverGraficosMantenimientos"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="10dp"

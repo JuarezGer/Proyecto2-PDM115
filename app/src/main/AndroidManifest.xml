@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
@@ -86,6 +91,12 @@
         <activity android:name=".tipoIncidencia.VisualizarTipoIncidenciaActivity"/>
         <activity android:name=".tipoIncidencia.EliminarTipoIncidenciaActivity"/>
 
+        <!-- CRUD TipoIncidencia -->
+        <activity android:name=".indicencia.CrearIncidenciaActivity"/>
+        <activity android:name=".indicencia.VisualizarIncidenciaActivity"/>
+        <activity android:name=".indicencia.ActualizarIncidenciaActivity"/>
+        <activity android:name=".indicencia.EliminarIncidenciaActivity"/>
+
         <!-- CRUD Rol -->
         <activity android:name=".rol.CrearRolActivity"/>
         <activity android:name=".rol.ActualizarRolActivity"/>
@@ -97,6 +108,16 @@
         <activity android:name=".usuario.CrearUsuarioActivity"/>
         <activity android:name=".usuario.VisualizarUsuarioActivity"/>
         <activity android:name=".usuario.EliminarUsuarioActivity"/>
+
+        <!-- Reportes -->
+        <activity android:name=".reporte.ReportesMenuActivity"/>
+        <activity android:name=".reporte.GraficosIncidenciasActivity"/>
+        <activity android:name=".reporte.GraficosMantenimientosActivity"/>
+        <activity android:name=".reporte.VisualizarReporteGeneralActivity"/>
+
+        <!-- Mapas -->
+        <activity android:name=".mapa.MapasMenuActivity" />
+        <activity android:name=".mapa.MapaDetalleActivity" />
     </application>
 
 </manifest>
