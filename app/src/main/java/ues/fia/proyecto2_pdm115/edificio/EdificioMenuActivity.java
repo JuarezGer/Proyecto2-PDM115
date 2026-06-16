@@ -15,10 +15,10 @@ public class EdificioMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_edificio);
 
-        /*findViewById(R.id.btnCrearEdificio).setOnClickListener(v -> abrir(CrearEdificioActivity.class));
-        findViewById(R.id.btnVisualizarEdificio).setOnClickListener(v -> abrir(VisualizarEdificioActivity.class));
-        findViewById(R.id.btnActualizarEdificio).setOnClickListener(v -> abrir(ActualizarEdificioActivity.class));
-        findViewById(R.id.btnEliminarEdificio).setOnClickListener(v -> abrir(EliminarEdificioActivity.class));*/
+        findViewById(R.id.btnCrearEdificio).setOnClickListener(v -> abrir(CrearEdificioActivity.class));
+        findViewById(R.id.btnVisualizarEdificio).setOnClickListener(v -> abrir(ConsultarEdificiosActivity.class));
+       findViewById(R.id.btnActualizarEdificio).setOnClickListener(v -> abrir(ActualizarEdificiosActivity.class));
+       findViewById(R.id.btnEliminarEdificio).setOnClickListener(v -> abrir(EliminarEdificiosActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
         configurarBarraInferior();
     }

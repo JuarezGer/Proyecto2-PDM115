@@ -15,10 +15,10 @@ public class LaboratorioMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_laboratorio);
 
-        /*findViewById(R.id.btnCrearLaboratorio).setOnClickListener(v -> abrir(CrearLaboratorioActivity.class));
-        findViewById(R.id.btnVisualizarLaboratorio).setOnClickListener(v -> abrir(VisualizarLaboratorioActivity.class));
-        findViewById(R.id.btnActualizarLaboratorio).setOnClickListener(v -> abrir(ActualizarLaboratorioActivity.class));
-        findViewById(R.id.btnEliminarLaboratorio).setOnClickListener(v -> abrir(EliminarLaboratorioActivity.class));*/
+        findViewById(R.id.btnCrearLaboratorio).setOnClickListener(v -> abrir(CrearLaboratorioActivity.class));
+        findViewById(R.id.btnVisualizarLaboratorio).setOnClickListener(v -> abrir(ConsultarLaboratorioActivity.class));
+        findViewById(R.id.btnActualizarLaboratorio).setOnClickListener(v -> abrir(ActualizarLaboratoriosActivity.class));
+        findViewById(R.id.btnEliminarLaboratorio).setOnClickListener(v -> abrir(EliminarLaboratoriosActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
         configurarBarraInferior();
     }

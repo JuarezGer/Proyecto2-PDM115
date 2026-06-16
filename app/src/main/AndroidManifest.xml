@@ -7,10 +7,12 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +23,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyecto2PDM115">
+        <activity
+            android:name=".VerMapaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".laboratorio.EliminarLaboratoriosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".edificio.EliminarEdificiosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".laboratorio.ActualizarLaboratoriosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".edificio.ActualizarEdificiosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".laboratorio.ConsultarLaboratorioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".edificio.ConsultarEdificiosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".laboratorio.CrearLaboratorioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".edificio.CrearEdificioActivity"
+            android:exported="false" />
         <activity
             android:name=".mantenimiento.ConsultarMantenimientoActivity"
             android:exported="false" />
@@ -34,6 +63,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+
 
         <activity
             android:name=".LoginActivity"
@@ -49,8 +80,7 @@
             android:exported="false" />
         <activity
             android:name=".LoginBiometricoActivity"
-            android:exported="false" />
-        <!-- Submenús CRUD LabCare -->
+            android:exported="false" /> <!-- Submenús CRUD LabCare -->
         <activity android:name=".rol.RolMenuActivity" />
         <activity android:name=".categoriaEquipo.CategoriaEquipoMenuActivity" />
         <activity android:name=".edificio.EdificioMenuActivity" />
@@ -62,27 +92,21 @@
         <activity android:name=".mantenimiento.CrearMantenimientoActivity" />
         <activity android:name=".mantenimiento.ModificarMantenimientoActivity" />
         <activity android:name=".mantenimiento.EliminarMantenimientoActivity" />
-        <activity android:name=".evidencia.InsertarEvidenciaActivity"/>
+        <activity android:name=".evidencia.InsertarEvidenciaActivity" />
         <activity android:name=".usuario.UsuarioMenuActivity" />
-        <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" />
-
-        <!-- CRUD TipoIncidencia -->
-        <activity android:name=".tipoIncidencia.CrearTipoIncidenciaActivity"/>
-        <activity android:name=".tipoIncidencia.ActualizarTipoIncidenciaActivity"/>
-        <activity android:name=".tipoIncidencia.VisualizarTipoIncidenciaActivity"/>
-        <activity android:name=".tipoIncidencia.EliminarTipoIncidenciaActivity"/>
-
-        <!-- CRUD Rol -->
-        <activity android:name=".rol.CrearRolActivity"/>
-        <activity android:name=".rol.ActualizarRolActivity"/>
-        <activity android:name=".rol.VisualizarRolesActivity"/>
-        <activity android:name=".rol.EliminarRolActivity"/>
-
-        <!-- CRUD Rol -->
-        <activity android:name=".usuario.ActualizarUsuarioActivity"/>
-        <activity android:name=".usuario.CrearUsuarioActivity"/>
-        <activity android:name=".usuario.VisualizarUsuarioActivity"/>
-        <activity android:name=".usuario.EliminarUsuarioActivity"/>
+        <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" /> <!-- CRUD TipoIncidencia -->
+        <activity android:name=".tipoIncidencia.CrearTipoIncidenciaActivity" />
+        <activity android:name=".tipoIncidencia.ActualizarTipoIncidenciaActivity" />
+        <activity android:name=".tipoIncidencia.VisualizarTipoIncidenciaActivity" />
+        <activity android:name=".tipoIncidencia.EliminarTipoIncidenciaActivity" /> <!-- CRUD Rol -->
+        <activity android:name=".rol.CrearRolActivity" />
+        <activity android:name=".rol.ActualizarRolActivity" />
+        <activity android:name=".rol.VisualizarRolesActivity" />
+        <activity android:name=".rol.EliminarRolActivity" /> <!-- CRUD Rol -->
+        <activity android:name=".usuario.ActualizarUsuarioActivity" />
+        <activity android:name=".usuario.CrearUsuarioActivity" />
+        <activity android:name=".usuario.VisualizarUsuarioActivity" />
+        <activity android:name=".usuario.EliminarUsuarioActivity" />
     </application>
 
 </manifest>

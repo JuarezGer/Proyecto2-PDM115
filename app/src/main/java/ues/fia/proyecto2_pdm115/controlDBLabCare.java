@@ -255,6 +255,7 @@ public class controlDBLabCare {
                     "id_edificio INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "nombre TEXT NOT NULL, " +
                     "codigo TEXT NOT NULL UNIQUE, " +
+                    "direccion TEXT NOT NULL, " +
                     "latitud REAL, " +
                     "longitud REAL" +
                     ");");
@@ -624,10 +625,10 @@ public class controlDBLabCare {
             insertarUsuarioInicial(db, 4, "Mariana", "Lopez", "supervisor@labcare.com", "sup123", 1, 1);
             insertarUsuarioInicial(db, 2, "Jose", "Martinez", "jose.tecnico@labcare.com", "jose123", 0, 1);
 
-            insertarEdificioInicial(db, "Edificio de Ingenieria", "EING", 13.7167, -89.2033);
-            insertarEdificioInicial(db, "Edificio de Ciencias", "ECIE", 13.7170, -89.2040);
-            insertarEdificioInicial(db, "Edificio de Biblioteca", "EBIB", 13.7174, -89.2046);
-            insertarEdificioInicial(db, "Edificio Administrativo", "EADM", 13.7162, -89.2027);
+            insertarEdificioInicial(db, "Edificio de Ingenieria", "EING", "Al lado de la Biblioteca Central, frente al auditórium",13.7167, -89.2033);
+            insertarEdificioInicial(db, "Edificio de Ciencias", "ECIE", "Frente al parqueo de estudiantes, junto a la plaza",13.7170, -89.2040);
+            insertarEdificioInicial(db, "Edificio de Biblioteca", "EBIB", "Detrás de Administración, contiguo a la entrada principal",13.7174, -89.2046);
+            insertarEdificioInicial(db, "Edificio Administrativo", "EADM", "En la entrada sur, frente a Registro Académico",13.7162, -89.2027);
 
             insertarLaboratorioInicial(db, 1, "Laboratorio de Informatica 1", "LAB-INF-01", "Piso 1", 13.7168, -89.2035);
             insertarLaboratorioInicial(db, 1, "Laboratorio de Redes", "LAB-RED-01", "Piso 2", 13.7169, -89.2036);
@@ -691,10 +692,11 @@ public class controlDBLabCare {
             db.insertWithOnConflict("usuarios", null, valores, SQLiteDatabase.CONFLICT_IGNORE);
         }
 
-        private void insertarEdificioInicial(SQLiteDatabase db, String nombre, String codigo, Double latitud, Double longitud) {
+        private void insertarEdificioInicial(SQLiteDatabase db, String nombre, String codigo, String direccion, Double latitud, Double longitud) {
             ContentValues valores = new ContentValues();
             valores.put("nombre", nombre);
             valores.put("codigo", codigo);
+            valores.put("direccion", direccion);
             putDoubleOrNull(valores, "latitud", latitud);
             putDoubleOrNull(valores, "longitud", longitud);
             db.insertWithOnConflict("edificios", null, valores, SQLiteDatabase.CONFLICT_IGNORE);
@@ -985,11 +987,12 @@ public class controlDBLabCare {
     // CRUD EDIFICIOS
     // =========================================================
 
-    public String insertarEdificio(String nombre, String codigo, Double latitud, Double longitud) {
+    public String insertarEdificio(String nombre, String codigo, String direccion,Double latitud, Double longitud) {
         try {
             ContentValues valores = new ContentValues();
             valores.put("nombre", nombre);
             valores.put("codigo", codigo);
+            valores.put("direccion", direccion);
             putDoubleOrNull(valores, "latitud", latitud);
             putDoubleOrNull(valores, "longitud", longitud);
             long resultado = db.insertOrThrow("edificios", null, valores);
@@ -1016,11 +1019,12 @@ public class controlDBLabCare {
         }
     }
 
-    public String actualizarEdificio(int idEdificio, String nombre, String codigo, Double latitud, Double longitud) {
+    public String actualizarEdificio(int idEdificio, String nombre, String codigo, String direccion, Double latitud, Double longitud) {
         try {
             ContentValues valores = new ContentValues();
             valores.put("nombre", nombre);
             valores.put("codigo", codigo);
+            valores.put("direccion", direccion);
             putDoubleOrNull(valores, "latitud", latitud);
             putDoubleOrNull(valores, "longitud", longitud);
             int filas = db.update("edificios", valores, "id_edificio = ?", new String[]{String.valueOf(idEdificio)});
