@@ -25,6 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyecto2PDM115">
         <activity
+            android:name=".categoriaEquipo.ActualizarCategoriaEquipoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".categoriaEquipo.VisualizarCategoriaEquipoActivity"
+            android:exported="false" />
+        <activity
             android:name=".categoriaEquipo.CrearCategoriaEquipoActivity"
             android:exported="false" />
         <activity
