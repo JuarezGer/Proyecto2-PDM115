@@ -15,8 +15,8 @@ public class CategoriaEquipoMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_categoria_equipo);
 
-        /*findViewById(R.id.btnCrearCategoriaEquipo).setOnClickListener(v -> abrir(CrearCategoriaEquipoActivity.class));
-        findViewById(R.id.btnVisualizarCategoriaEquipo).setOnClickListener(v -> abrir(VisualizarCategoriaEquipoActivity.class));
+        findViewById(R.id.btnCrearCategoriaEquipo).setOnClickListener(v -> abrir(CrearCategoriaEquipoActivity.class));
+        /*findViewById(R.id.btnVisualizarCategoriaEquipo).setOnClickListener(v -> abrir(VisualizarCategoriaEquipoActivity.class));
         findViewById(R.id.btnActualizarCategoriaEquipo).setOnClickListener(v -> abrir(ActualizarCategoriaEquipoActivity.class));
         findViewById(R.id.btnEliminarCategoriaEquipo).setOnClickListener(v -> abrir(EliminarCategoriaEquipoActivity.class));*/
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());

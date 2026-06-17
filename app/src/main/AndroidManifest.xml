@@ -8,11 +8,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -27,6 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyecto2PDM115">
         <activity
+            android:name=".categoriaEquipo.CrearCategoriaEquipoActivity"
+            android:exported="false" />
+        <activity
             android:name=".evidencia.ModificarEvidenciaActivity"
             android:exported="false" />
         <activity
@@ -38,7 +39,8 @@
         <activity
             android:name=".evidencia.EliminarEvidenciaActivity"
             android:exported="false" />
-        <activity android:name=".evidencia.SeleccionarEvidenciaActivity"
+        <activity
+            android:name=".evidencia.SeleccionarEvidenciaActivity"
             android:exported="false" />
         <activity
             android:name=".mantenimiento.ConsultarMantenimientoActivity"
@@ -68,8 +70,7 @@
             android:exported="false" />
         <activity
             android:name=".LoginBiometricoActivity"
-            android:exported="false" />
-        <!-- Submenús CRUD LabCare -->
+            android:exported="false" /> <!-- Submenús CRUD LabCare -->
         <activity android:name=".rol.RolMenuActivity" />
         <activity android:name=".categoriaEquipo.CategoriaEquipoMenuActivity" />
         <activity android:name=".edificio.EdificioMenuActivity" />
@@ -83,39 +84,27 @@
         <activity android:name=".mantenimiento.EliminarMantenimientoActivity" />
         <activity android:name=".evidencia.InsertarEvidenciaActivity" />
         <activity android:name=".usuario.UsuarioMenuActivity" />
-        <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" />
-
-        <!-- CRUD TipoIncidencia -->
-        <activity android:name=".tipoIncidencia.CrearTipoIncidenciaActivity"/>
-        <activity android:name=".tipoIncidencia.ActualizarTipoIncidenciaActivity"/>
-        <activity android:name=".tipoIncidencia.VisualizarTipoIncidenciaActivity"/>
-        <activity android:name=".tipoIncidencia.EliminarTipoIncidenciaActivity"/>
-
-        <!-- CRUD TipoIncidencia -->
-        <activity android:name=".indicencia.CrearIncidenciaActivity"/>
-        <activity android:name=".indicencia.VisualizarIncidenciaActivity"/>
-        <activity android:name=".indicencia.ActualizarIncidenciaActivity"/>
-        <activity android:name=".indicencia.EliminarIncidenciaActivity"/>
-
-        <!-- CRUD Rol -->
-        <activity android:name=".rol.CrearRolActivity"/>
-        <activity android:name=".rol.ActualizarRolActivity"/>
-        <activity android:name=".rol.VisualizarRolesActivity"/>
-        <activity android:name=".rol.EliminarRolActivity"/>
-
-        <!-- CRUD Rol -->
-        <activity android:name=".usuario.ActualizarUsuarioActivity"/>
-        <activity android:name=".usuario.CrearUsuarioActivity"/>
-        <activity android:name=".usuario.VisualizarUsuarioActivity"/>
-        <activity android:name=".usuario.EliminarUsuarioActivity"/>
-
-        <!-- Reportes -->
-        <activity android:name=".reporte.ReportesMenuActivity"/>
-        <activity android:name=".reporte.GraficosIncidenciasActivity"/>
-        <activity android:name=".reporte.GraficosMantenimientosActivity"/>
-        <activity android:name=".reporte.VisualizarReporteGeneralActivity"/>
-
-        <!-- Mapas -->
+        <activity android:name=".tipoIncidencia.TipoIncidenciaMenuActivity" /> <!-- CRUD TipoIncidencia -->
+        <activity android:name=".tipoIncidencia.CrearTipoIncidenciaActivity" />
+        <activity android:name=".tipoIncidencia.ActualizarTipoIncidenciaActivity" />
+        <activity android:name=".tipoIncidencia.VisualizarTipoIncidenciaActivity" />
+        <activity android:name=".tipoIncidencia.EliminarTipoIncidenciaActivity" /> <!-- CRUD TipoIncidencia -->
+        <activity android:name=".indicencia.CrearIncidenciaActivity" />
+        <activity android:name=".indicencia.VisualizarIncidenciaActivity" />
+        <activity android:name=".indicencia.ActualizarIncidenciaActivity" />
+        <activity android:name=".indicencia.EliminarIncidenciaActivity" /> <!-- CRUD Rol -->
+        <activity android:name=".rol.CrearRolActivity" />
+        <activity android:name=".rol.ActualizarRolActivity" />
+        <activity android:name=".rol.VisualizarRolesActivity" />
+        <activity android:name=".rol.EliminarRolActivity" /> <!-- CRUD Rol -->
+        <activity android:name=".usuario.ActualizarUsuarioActivity" />
+        <activity android:name=".usuario.CrearUsuarioActivity" />
+        <activity android:name=".usuario.VisualizarUsuarioActivity" />
+        <activity android:name=".usuario.EliminarUsuarioActivity" /> <!-- Reportes -->
+        <activity android:name=".reporte.ReportesMenuActivity" />
+        <activity android:name=".reporte.GraficosIncidenciasActivity" />
+        <activity android:name=".reporte.GraficosMantenimientosActivity" />
+        <activity android:name=".reporte.VisualizarReporteGeneralActivity" /> <!-- Mapas -->
         <activity android:name=".mapa.MapasMenuActivity" />
         <activity android:name=".mapa.MapaDetalleActivity" />
     </application>
