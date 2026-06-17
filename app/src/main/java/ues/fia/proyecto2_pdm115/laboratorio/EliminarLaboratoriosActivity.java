@@ -57,7 +57,7 @@ public class EliminarLaboratoriosActivity extends AppCompatActivity {
             Cursor cursor = helper.getDb().query("laboratorios", null, "codigo = ?", new String[]{codBuscar}, null, null, null);
 
             if (cursor != null && cursor.moveToFirst()) {
-                // Usamos id_lab que es la llave primaria en el script de tu grupo
+
                 idLabSeleccionado = cursor.getInt(cursor.getColumnIndexOrThrow("id_laboratorio"));
                 String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
                 String piso = cursor.getString(cursor.getColumnIndexOrThrow("piso"));
@@ -93,7 +93,7 @@ public class EliminarLaboratoriosActivity extends AppCompatActivity {
         }
 
         helper.abrir();
-        // Llamamos al método del helper de tu grupo
+
         String resultado = helper.eliminarLaboratorio(idLabSeleccionado);
         helper.cerrar();
 

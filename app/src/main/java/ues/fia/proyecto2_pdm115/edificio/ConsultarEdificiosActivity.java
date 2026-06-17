@@ -42,10 +42,8 @@ public class ConsultarEdificiosActivity extends AppCompatActivity {
         btnActualizar = findViewById(R.id.btnActualizarListaEdificios);
         btnVolver = findViewById(R.id.btnVolverEdificios);
 
-        // Cargamos la lista con las fichas de texto formateadas
         cargarEdificios();
 
-        // Los botones de acción normales
         btnActualizar.setOnClickListener(v -> cargarEdificios());
         btnVolver.setOnClickListener(v -> finish());
     }
@@ -61,11 +59,9 @@ public class ConsultarEdificiosActivity extends AppCompatActivity {
             total = cursor.getCount();
             if (cursor.moveToFirst()) {
                 do {
-                    // 🚀 SOLUCIÓN: Buscamos dinámicamente el índice por el nombre exacto de la columna
                     String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
                     String codigo = cursor.getString(cursor.getColumnIndexOrThrow("codigo"));
 
-                    // Evitamos crasheos si la dirección viene vacía o nula
                     int idxDireccion = cursor.getColumnIndexOrThrow("direccion");
                     String direccion = cursor.isNull(idxDireccion) ? "No especificada" : cursor.getString(idxDireccion);
 
@@ -78,7 +74,6 @@ public class ConsultarEdificiosActivity extends AppCompatActivity {
                     String latStr = (latitud != null) ? String.valueOf(latitud) : "No asignada";
                     String lonStr = (longitud != null) ? String.valueOf(longitud) : "No asignada";
 
-                    // Formateamos la ficha de manera ordenada
                     String fichaEdificio = "Código: " + codigo + "\n" +
                             "Nombre del Edificio: " + nombre + "\n" +
                             "Dirección: " + direccion + "\n" +
@@ -92,7 +87,6 @@ public class ConsultarEdificiosActivity extends AppCompatActivity {
         }
         helper.cerrar();
 
-        // Actualizar estadísticas superiores
         txtTotal.setText("Total: " + total);
 
         if (total == 0) {
@@ -102,7 +96,6 @@ public class ConsultarEdificiosActivity extends AppCompatActivity {
             txtMensaje.setVisibility(View.GONE);
         }
 
-        // Usamos un adaptador simple pero ahora el texto lleva toda la información formateada
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaFormat);
         listViewEdificios.setAdapter(adapter);
     }

@@ -30,7 +30,7 @@ public class CrearEdificioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_edificio);
 
-        // Instanciamos el helper correcto de la base de datos
+
         helper = new controlDBLabCare(this);
 
         mapaLauncher = registerForActivityResult(
@@ -62,22 +62,19 @@ public class CrearEdificioActivity extends AppCompatActivity {
         btnCancelar = findViewById(R.id.btnCancelarEdificio);
         btnGuardar = findViewById(R.id.btnGuardarEdificio);
 
-        // Configurar la Toolbar superior
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+
     }
 
     private void configurarBotones() {
-        // 🚀 AQUÍ CAMBIAMOS TODO EL CÓDIGO VIEJO POR ESTA LÍNEA LIMPIA PARA BRINCAR A OPENSTREETMAP:
+
         btnGpsEdificio.setOnClickListener(v -> {
             Intent intent = new Intent(this, VerMapaActivity.class);
             mapaLauncher.launch(intent); // Abre tu mapa interactivo esperando la respuesta
         });
 
-        // Configuración de los botones de acción estándar
+
         btnGuardar.setOnClickListener(v -> guardarEdificio());
         btnCancelar.setOnClickListener(v -> finish());
     }
@@ -95,7 +92,7 @@ public class CrearEdificioActivity extends AppCompatActivity {
         Double longitud = longitudStr.isEmpty() ? null : Double.parseDouble(longitudStr);
 
         helper.abrir();
-        // 🚀 Mandamos 'direccion' en el orden que pide tu base de datos
+
         String resultado = helper.insertarEdificio(nombre, codigo, direccion, latitud, longitud);
         helper.cerrar();
 

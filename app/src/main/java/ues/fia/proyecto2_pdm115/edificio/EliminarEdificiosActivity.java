@@ -63,7 +63,7 @@ public class EliminarEdificiosActivity extends AppCompatActivity {
                 try {
                     direccion = cursor.getString(cursor.getColumnIndexOrThrow("direccion"));
                     if(direccion == null || direccion.isEmpty()) direccion = "No asignada";
-                } catch(Exception e) { /** Por si la columna no existe en registros huérfanos **/ }
+                } catch(Exception e) { }
 
                 Double lat = cursor.isNull(cursor.getColumnIndexOrThrow("latitud")) ? null : cursor.getDouble(cursor.getColumnIndexOrThrow("latitud"));
                 Double lon = cursor.isNull(cursor.getColumnIndexOrThrow("longitud")) ? null : cursor.getDouble(cursor.getColumnIndexOrThrow("longitud"));
@@ -96,7 +96,7 @@ public class EliminarEdificiosActivity extends AppCompatActivity {
         }
 
         helper.abrir();
-        // Nota: Si el método de eliminación de tu grupo pide el código en vez del ID, cambia 'idEdificioSeleccionado' por el string del código.
+
         String resultado = helper.eliminarEdificio(idEdificioSeleccionado);
         helper.cerrar();
 

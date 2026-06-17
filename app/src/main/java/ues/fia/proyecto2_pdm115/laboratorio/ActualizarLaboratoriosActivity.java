@@ -16,7 +16,6 @@ import android.widget.Toast;
 import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import ues.fia.proyecto2_pdm115.R;
 import ues.fia.proyecto2_pdm115.VerMapaActivity;
 
 
@@ -25,8 +24,8 @@ public class ActualizarLaboratoriosActivity extends AppCompatActivity {
     private controlDBLabCare helper;
     private EditText editBuscarCodigo, editNombre, editPiso, editLatitud, editLongitud;
     private Button btnBuscar, btnGpsSimular, btnActualizar, btnVolver;
-    private int idEdificioAsociado = -1; // Guardamos el ID de la relación por integridad
-    private ActivityResultLauncher<Intent> mapaLauncher; //
+    private int idEdificioAsociado = -1;
+    private ActivityResultLauncher<Intent> mapaLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +45,16 @@ public class ActualizarLaboratoriosActivity extends AppCompatActivity {
         btnActualizar = findViewById(R.id.btnConfirmarActLab);
         btnVolver = findViewById(R.id.btnVolverActLab);
 
-        // 🚀 Inicializamos el receptor de datos de OpenStreetMap
+
         mapaLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        // Capturamos las nuevas coordenadas seleccionadas en el mapa interactivo
+
                         double lat = result.getData().getDoubleExtra("LATITUD", 0.0);
                         double lon = result.getData().getDoubleExtra("LONGITUD", 0.0);
 
-                        // Las sobreescribimos en las cajas de texto de inmediato
+
                         editLatitud.setText(String.valueOf(lat));
                         editLongitud.setText(String.valueOf(lon));
 
@@ -66,7 +65,7 @@ public class ActualizarLaboratoriosActivity extends AppCompatActivity {
 
         btnBuscar.setOnClickListener(v -> buscarLaboratorio());
 
-        // 🚀 REEMPLAZAMOS LA VIEJA SIMULACIÓN DE TEXTO FIJO POR EL MAPA INTERACTIVO REAL:
+
         btnGpsSimular.setOnClickListener(v -> {
             Intent intent = new Intent(this, VerMapaActivity.class);
             mapaLauncher.launch(intent);
@@ -89,16 +88,13 @@ public class ActualizarLaboratoriosActivity extends AppCompatActivity {
             Cursor cursor = helper.getDb().query("laboratorios", null, "codigo = ?", new String[]{codBuscar}, null, null, null);
 
             if (cursor != null && cursor.moveToFirst()) {
-                // 1. Nombre del laboratorio
+
                 editNombre.setText(cursor.getString(cursor.getColumnIndexOrThrow("nombre")));
 
-                // 2. Número de piso
                 editPiso.setText(cursor.getString(cursor.getColumnIndexOrThrow("piso")));
 
-                // 3. Conservamos el ID del edificio aliado (Llave foránea)
                 idEdificioAsociado = cursor.getInt(cursor.getColumnIndexOrThrow("id_edificio"));
 
-                // 4. Coordenadas Geográficas reales
                 int latIndex = cursor.getColumnIndexOrThrow("latitud");
                 int lonIndex = cursor.getColumnIndexOrThrow("longitud");
                 editLatitud.setText(cursor.isNull(latIndex) ? "" : String.valueOf(cursor.getDouble(latIndex)));
@@ -113,7 +109,6 @@ public class ActualizarLaboratoriosActivity extends AppCompatActivity {
             Toast.makeText(this, "Error en los campos al buscar: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } finally {
-            // CORREGIDO: Tenías una llave suelta en lugar de la palabra clave 'finally'
             helper.cerrar();
         }
     }
@@ -147,7 +142,6 @@ public class ActualizarLaboratoriosActivity extends AppCompatActivity {
             Cursor cursor = helper.getDb().query("laboratorios", null, "codigo = ?", new String[]{codigo}, null, null, null);
 
             if (cursor != null && cursor.moveToFirst()) {
-                // 🚀 CORREGIDO: Ahora busca el nombre exacto de tu columna en SQLite
                 idLaboratorio = cursor.getInt(cursor.getColumnIndexOrThrow("id_laboratorio"));
                 cursor.close();
             }

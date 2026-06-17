@@ -9,17 +9,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import ues.fia.proyecto2_pdm115.R;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.textfield.TextInputEditText;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import ues.fia.proyecto2_pdm115.controlDBLabCare;
 import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
+
 
 import ues.fia.proyecto2_pdm115.VerMapaActivity;
 
@@ -32,7 +29,7 @@ public class CrearLaboratorioActivity extends AppCompatActivity {
     private ImageButton btnGps;
     private Button btnCancelar, btnGuardar;
 
-    // Lista paralela para capturar los IDs de los edificios en la base de datos
+
     private List<Integer> idsEdificios = new ArrayList<>();
 
     @Override
@@ -42,16 +39,14 @@ public class CrearLaboratorioActivity extends AppCompatActivity {
 
         helper = new controlDBLabCare(this);
 
-
         mapaLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        // Recibimos los valores numéricos capturados en OpenStreetMap
+
                         double lat = result.getData().getDoubleExtra("LATITUD", 0.0);
                         double lon = result.getData().getDoubleExtra("LONGITUD", 0.0);
 
-                        // Los inyectamos directo en los EditText de laboratorios
                         editLatitud.setText(String.valueOf(lat));
                         editLongitud.setText(String.valueOf(lon));
 
@@ -76,28 +71,22 @@ public class CrearLaboratorioActivity extends AppCompatActivity {
         btnCancelar = findViewById(R.id.btnCancelarLab);
         btnGuardar = findViewById(R.id.btnGuardarLab);
 
-        // Configuración de Toolbar institucional
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbarLab);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     private void configurarSpinnerEdificios() {
         helper.abrir();
 
-        // Llamamos al método nativo del grupo para obtener los edificios ordenados
         Cursor cursor = helper.consultarEdificiosCursor();
         List<String> listaEdificios = new ArrayList<>();
 
         listaEdificios.add("Selecciona un edificio");
-        idsEdificios.add(-1); // ID bandera para la opción por defecto
+        idsEdificios.add(-1);
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    // id_edificio está en el índice 0, nombre en el índice 1 según la estructura de la tabla
                     idsEdificios.add(cursor.getInt(0));
                     listaEdificios.add(cursor.getString(1) + " (" + cursor.getString(2) + ")");
                 } while (cursor.moveToNext());
@@ -118,14 +107,12 @@ public class CrearLaboratorioActivity extends AppCompatActivity {
         });
 
         btnCancelar.setOnClickListener(v -> finish());
-
         btnGuardar.setOnClickListener(v -> guardarLaboratorio());
     }
 
     private void guardarLaboratorio() {
         if (!validarCampos()) return;
 
-        // Obtener el ID real del edificio seleccionado usando la posición del Spinner
         int idEdificio = idsEdificios.get(spEdificio.getSelectedItemPosition());
 
         String codigo = editCodigo.getText() != null ? editCodigo.getText().toString().trim() : "";
@@ -138,7 +125,6 @@ public class CrearLaboratorioActivity extends AppCompatActivity {
         Double longitud = longitudStr.isEmpty() ? null : Double.parseDouble(longitudStr);
         if (piso.isEmpty()) piso = null;
 
-        // Inserción limpia usando el método oficial del grupo en ControlDBLabCare
         helper.abrir();
         String resultado = helper.insertarLaboratorio(idEdificio, nombre, codigo, piso, latitud, longitud);
         helper.cerrar();

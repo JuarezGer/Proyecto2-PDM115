@@ -68,20 +68,17 @@ public class ConsultarLaboratorioActivity extends AppCompatActivity {
                     try {
                         edificioPertenece = cursor.getString(cursor.getColumnIndexOrThrow("edificio"));
                     } catch (Exception e) {
-                        // Por si en el query de tu grupo la columna se llama diferente (ej: nombre_edificio)
                         int index = cursor.getColumnIndex("nombre_edificio");
                         if(index != -1) edificioPertenece = cursor.getString(index);
                         else edificioPertenece = "No especificado";
                     }
 
-                    // Ubicación geográfica del laboratorio
                     Double latitud = cursor.isNull(cursor.getColumnIndexOrThrow("latitud")) ? null : cursor.getDouble(cursor.getColumnIndexOrThrow("latitud"));
                     Double longitud = cursor.isNull(cursor.getColumnIndexOrThrow("longitud")) ? null : cursor.getDouble(cursor.getColumnIndexOrThrow("longitud"));
 
                     String latStr = (latitud != null) ? String.valueOf(latitud) : "No asignada";
                     String lonStr = (longitud != null) ? String.valueOf(longitud) : "No asignada";
 
-                    // Construimos la ficha detallada del laboratorio con saltos de línea (\n)
                     String fichaLaboratorio = "Código: " + labCodigo + "\n" +
                             "Laboratorio: " + labNombre + "\n" +
                              piso + "\n" +"Pertenece a: " + edificioPertenece + "\n" +
@@ -94,7 +91,6 @@ public class ConsultarLaboratorioActivity extends AppCompatActivity {
         }
         helper.cerrar();
 
-        // Actualizar estadísticas superiores (Total: X)
         txtTotal.setText("Total: " + total);
 
         if (total == 0) {
@@ -104,7 +100,6 @@ public class ConsultarLaboratorioActivity extends AppCompatActivity {
             txtMensaje.setVisibility(View.GONE);
         }
 
-        // Adaptador para inflar el texto multilínea en el ListView
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaFormat);
         listViewLaboratorios.setAdapter(adapter);
     }

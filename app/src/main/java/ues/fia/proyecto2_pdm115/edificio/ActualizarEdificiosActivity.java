@@ -39,20 +39,18 @@ public class ActualizarEdificiosActivity extends AppCompatActivity {
         editLongitud = findViewById(R.id.editActLonEdificio);
 
         btnBuscar = findViewById(R.id.btnBuscarEdificio);
-        btnGpsSimular = findViewById(R.id.btnGpsActEdificio); // Este es tu botón de ubicación en el XML
+        btnGpsSimular = findViewById(R.id.btnGpsActEdificio);
         btnActualizar = findViewById(R.id.btnConfirmarActEdificio);
         btnVolver = findViewById(R.id.btnVolverActEdificio);
 
-        // Inicializamos el receptor del mapa interactivo
         mapaLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        // Extraemos las nuevas coordenadas que el usuario seleccionó en OpenStreetMap
+
                         double lat = result.getData().getDoubleExtra("LATITUD", 0.0);
                         double lon = result.getData().getDoubleExtra("LONGITUD", 0.0);
 
-                        // Las sobreescribimos en las cajas de texto automáticamente
                         editLatitud.setText(String.valueOf(lat));
                         editLongitud.setText(String.valueOf(lon));
 
@@ -63,7 +61,6 @@ public class ActualizarEdificiosActivity extends AppCompatActivity {
 
         btnBuscar.setOnClickListener(v -> buscarEdificio());
 
-        // 🚀 REEMPLAZAMOS LA SIMULACIÓN VIEJA POR LA APERTURA REAL DE OPENSTREETMAP:
         btnGpsSimular.setOnClickListener(v -> {
             Intent intent = new Intent(this, VerMapaActivity.class);
             mapaLauncher.launch(intent);
@@ -116,7 +113,7 @@ public class ActualizarEdificiosActivity extends AppCompatActivity {
     private void actualizarEdificio() {
         String codigo = editBuscarCodigo.getText().toString().trim();
         String nombre = editNombre.getText().toString().trim();
-        String direccion = editDireccion.getText().toString().trim(); // 🚀 Capturamos la dirección modificada
+        String direccion = editDireccion.getText().toString().trim();
         String latStr = editLatitud.getText().toString().trim();
         String lonStr = editLongitud.getText().toString().trim();
 
@@ -143,7 +140,6 @@ public class ActualizarEdificiosActivity extends AppCompatActivity {
             return;
         }
 
-        // 🚀 Acomodamos 'direccion' respetando el orden exacto de los parámetros requeridos
         String resultado = helper.actualizarEdificio(idEdificio, nombre, codigo, direccion, latitud, longitud);
         helper.cerrar();
 
