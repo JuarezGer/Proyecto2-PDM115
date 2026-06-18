@@ -1,17 +1,8 @@
 package ues.fia.proyecto2_pdm115.edificio;
 
-import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import ues.fia.proyecto2_pdm115.R;
-import ues.fia.proyecto2_pdm115.controlDBLabCare;
-
 import android.database.Cursor;
+import android.database.SQLException;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,15 +10,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import ues.fia.proyecto2_pdm115.R;
+import ues.fia.proyecto2_pdm115.controlDBLabCare;
 
 public class ConsultarEdificiosActivity extends AppCompatActivity {
 
     private controlDBLabCare helper;
     private ListView listViewEdificios;
-    private TextView txtTotal, txtMensaje;
-    private Button btnActualizar, btnVolver;
+    private TextView txtTotal;
+    private TextView txtMensaje;
+    private Button btnActualizar;
+    private Button btnVolver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,67 +34,92 @@ public class ConsultarEdificiosActivity extends AppCompatActivity {
 
         helper = new controlDBLabCare(this);
 
+        vincularVistas();
+        configurarEventos();
+        cargarEdificios();
+    }
+
+    private void vincularVistas() {
         listViewEdificios = findViewById(R.id.listEdificios);
         txtTotal = findViewById(R.id.txtTotalEdificios);
         txtMensaje = findViewById(R.id.txtMensajeEdificios);
         btnActualizar = findViewById(R.id.btnActualizarListaEdificios);
         btnVolver = findViewById(R.id.btnVolverEdificios);
+    }
 
-        cargarEdificios();
-
+    private void configurarEventos() {
         btnActualizar.setOnClickListener(v -> cargarEdificios());
         btnVolver.setOnClickListener(v -> finish());
     }
 
     private void cargarEdificios() {
-        helper.abrir();
-        Cursor cursor = helper.consultarEdificiosCursor();
-
         List<String> listaFormat = new ArrayList<>();
+        Cursor cursor = null;
         int total = 0;
 
-        if (cursor != null) {
-            total = cursor.getCount();
-            if (cursor.moveToFirst()) {
-                do {
-                    String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                    String codigo = cursor.getString(cursor.getColumnIndexOrThrow("codigo"));
+        try {
+            helper.abrir();
+            cursor = helper.consultarEdificiosCursor();
 
-                    int idxDireccion = cursor.getColumnIndexOrThrow("direccion");
-                    String direccion = cursor.isNull(idxDireccion) ? "No especificada" : cursor.getString(idxDireccion);
+            if (cursor != null) {
+                total = cursor.getCount();
 
-                    int idxLat = cursor.getColumnIndexOrThrow("latitud");
-                    int idxLon = cursor.getColumnIndexOrThrow("longitud");
+                if (cursor.moveToFirst()) {
+                    do {
+                        int id = cursor.getInt(cursor.getColumnIndexOrThrow("id_edificio"));
+                        String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                        String codigo = cursor.getString(cursor.getColumnIndexOrThrow("codigo"));
 
-                    Double latitud = cursor.isNull(idxLat) ? null : cursor.getDouble(idxLat);
-                    Double longitud = cursor.isNull(idxLon) ? null : cursor.getDouble(idxLon);
+                        int idxLat = cursor.getColumnIndexOrThrow("latitud");
+                        int idxLon = cursor.getColumnIndexOrThrow("longitud");
 
-                    String latStr = (latitud != null) ? String.valueOf(latitud) : "No asignada";
-                    String lonStr = (longitud != null) ? String.valueOf(longitud) : "No asignada";
+                        String latStr = cursor.isNull(idxLat) ? "No asignada" : String.valueOf(cursor.getDouble(idxLat));
+                        String lonStr = cursor.isNull(idxLon) ? "No asignada" : String.valueOf(cursor.getDouble(idxLon));
 
-                    String fichaEdificio = "Código: " + codigo + "\n" +
-                            "Nombre del Edificio: " + nombre + "\n" +
-                            "Dirección: " + direccion + "\n" +
-                            "Ubicación Geográfica:\n" + "Latitud: " + latStr +"\n" + "Longitud: " + lonStr;
+                        String fichaEdificio = "ID: " + id + "\n" +
+                                "Código: " + codigo + "\n" +
+                                "Nombre del edificio: " + nombre + "\n" +
+                                "Ubicación geográfica:\n" +
+                                "Latitud: " + latStr + "\n" +
+                                "Longitud: " + lonStr;
 
-                    listaFormat.add(fichaEdificio);
-
-                } while (cursor.moveToNext());
+                        listaFormat.add(fichaEdificio);
+                    } while (cursor.moveToNext());
+                }
             }
-            cursor.close();
+
+            txtTotal.setText("Total: " + total);
+
+            if (total == 0) {
+                txtMensaje.setText("No hay edificios registrados en la base de datos.");
+                txtMensaje.setVisibility(View.VISIBLE);
+            } else {
+                txtMensaje.setVisibility(View.GONE);
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    listaFormat
+            );
+            listViewEdificios.setAdapter(adapter);
+
+        } catch (SQLException e) {
+            Toast.makeText(this, "Error al abrir la base de datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al cargar edificios: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } finally {
+            if (cursor != null) cursor.close();
+            helper.cerrar();
         }
-        helper.cerrar();
+    }
 
-        txtTotal.setText("Total: " + total);
-
-        if (total == 0) {
-            txtMensaje.setText("No hay edificios registrados en la base de datos.");
-            txtMensaje.setVisibility(View.VISIBLE);
-        } else {
-            txtMensaje.setVisibility(View.GONE);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (helper != null) {
+            helper.cerrar();
+            helper = null;
         }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaFormat);
-        listViewEdificios.setAdapter(adapter);
     }
 }
