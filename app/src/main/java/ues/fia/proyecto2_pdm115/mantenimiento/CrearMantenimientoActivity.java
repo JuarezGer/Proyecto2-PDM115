@@ -28,6 +28,8 @@ import java.util.Locale;
 
 import ues.fia.proyecto2_pdm115.R;
 import ues.fia.proyecto2_pdm115.controlDBLabCare;
+import ues.fia.proyecto2_pdm115.notificaciones.NotificacionLocalHelper;
+import ues.fia.proyecto2_pdm115.notificaciones.NotificationPermissionHelper;
 import ues.fia.proyecto2_pdm115.utils.PermissionHelper;
 import ues.fia.proyecto2_pdm115.utils.SessionManager;
 
@@ -56,6 +58,7 @@ public class CrearMantenimientoActivity extends AppCompatActivity {
 
         helper = new controlDBLabCare(this);
         sessionManager = new SessionManager(this);
+        NotificationPermissionHelper.solicitarPermisoNotificaciones(this);
 
         vincularVistas();
         configurarSpinners();
@@ -233,6 +236,8 @@ public class CrearMantenimientoActivity extends AppCompatActivity {
         String solucion = editSolucion.getText() != null ? editSolucion.getText().toString().trim() : "";
         String fechaInicio = editFechaInicio.getText().toString().trim();
         String fechaFin = editFechaFin.getText().toString().trim();
+        String nombreTecnico = spTecnico.getSelectedItem().toString();
+        String nombreEquipo = spEquipo.getSelectedItem().toString();
 
         if (fechaInicio.isEmpty()) fechaInicio = null;
         if (fechaFin.isEmpty()) fechaFin = null;
@@ -242,13 +247,47 @@ public class CrearMantenimientoActivity extends AppCompatActivity {
                 idEquipo, idIncidencia, idUsuarioCrea, idTecnico,
                 tipo, estado, diagnostico, solucion, fechaInicio, fechaFin
         );
+
+        int idMantenimientoGenerado = -1;
+        if (resultado.contains("correctamente")) {
+            idMantenimientoGenerado = obtenerUltimoIdMantenimiento();
+        }
+
         helper.cerrar();
 
         if (resultado.contains("correctamente")) {
             Toast.makeText(this, resultado, Toast.LENGTH_LONG).show();
+
+            if (idMantenimientoGenerado > 0) {
+                NotificacionLocalHelper.mostrarNotificacionMantenimientoAsignado(
+                        this,
+                        idMantenimientoGenerado,
+                        nombreTecnico,
+                        nombreEquipo
+                );
+            }
+
             finish();
         } else {
             Toast.makeText(this, "Error: " + resultado, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private int obtenerUltimoIdMantenimiento() {
+        Cursor cursor = null;
+        try {
+            // Debe ejecutarse antes de cerrar la conexión usada para insertar.
+            cursor = helper.getDb().rawQuery("SELECT last_insert_rowid()", null);
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+            return -1;
+        } catch (Exception e) {
+            return -1;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 

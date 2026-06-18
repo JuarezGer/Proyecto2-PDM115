@@ -1,8 +1,11 @@
 package ues.fia.proyecto2_pdm115.mantenimiento;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -16,13 +19,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import android.os.Handler;
-import android.os.Looper;
 
 import ues.fia.proyecto2_pdm115.R;
 import ues.fia.proyecto2_pdm115.controlDBLabCare;
 
 public class ConsultarMantenimientoActivity extends AppCompatActivity {
+
+    public static final String EXTRA_ABRIR_MODAL = "abrir_modal_mantenimiento";
+    public static final String EXTRA_ID_MANTENIMIENTO = "id_mantenimiento";
 
     private controlDBLabCare helper;
     private RecyclerView recyclerView;
@@ -39,7 +43,6 @@ public class ConsultarMantenimientoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultar_mantenimiento);
 
-        // Reutilizamos el mismo layout de la lista si lo deseas, o uno clonado
         helper = new controlDBLabCare(this);
         recyclerView = findViewById(R.id.recyclerMantenimientos);
         txtNoData = findViewById(R.id.txtNoData);
@@ -47,6 +50,15 @@ public class ConsultarMantenimientoActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         cargarDatos();
+        verificarAperturaDesdeNotificacion(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        cargarDatos();
+        verificarAperturaDesdeNotificacion(intent);
     }
 
     private void cargarDatos() {
@@ -66,7 +78,7 @@ public class ConsultarMantenimientoActivity extends AppCompatActivity {
                 // Al hacer clic, cargamos los detalles completos usando el ID
                 adapter = new MantenimientoAdapter(listaMantenimientos, (mantenimiento, position) -> {
                     String idStr = mantenimiento.get("id_mantenimiento");
-                    if (idStr != null) {
+                    if (idStr != null && !idStr.trim().isEmpty()) {
                         obtenerYMostrarDetalles(Integer.parseInt(idStr));
                     }
                 });
@@ -74,6 +86,21 @@ public class ConsultarMantenimientoActivity extends AppCompatActivity {
             } else {
                 adapter.updateData(listaMantenimientos);
             }
+        }
+    }
+
+    private void verificarAperturaDesdeNotificacion(Intent intent) {
+        if (intent == null) return;
+
+        boolean abrirModal = intent.getBooleanExtra(EXTRA_ABRIR_MODAL, false);
+        int idMantenimiento = intent.getIntExtra(EXTRA_ID_MANTENIMIENTO, -1);
+
+        if (abrirModal && idMantenimiento > 0) {
+            obtenerYMostrarDetalles(idMantenimiento);
+
+            // Evita que el modal se vuelva a abrir al rotar pantalla o reutilizar el intent.
+            intent.removeExtra(EXTRA_ABRIR_MODAL);
+            intent.removeExtra(EXTRA_ID_MANTENIMIENTO);
         }
     }
 
@@ -96,7 +123,11 @@ public class ConsultarMantenimientoActivity extends AppCompatActivity {
             } else {
                 if (cursorDetalle != null) cursorDetalle.close();
                 helper.cerrar();
-                mainHandler.post(() -> Toast.makeText(ConsultarMantenimientoActivity.this, "No se encontraron detalles", Toast.LENGTH_SHORT).show());
+                mainHandler.post(() -> Toast.makeText(
+                        ConsultarMantenimientoActivity.this,
+                        "No se encontraron detalles",
+                        Toast.LENGTH_SHORT
+                ).show());
             }
         });
     }
@@ -157,7 +188,7 @@ public class ConsultarMantenimientoActivity extends AppCompatActivity {
 
         tvUbicacion.setText(d.get("nombre_laboratorio") + " (Piso " + d.get("piso") + ")\nEdificio: " + d.get("nombre_edificio"));
 
-        if (d.get("titulo_incidencia").equals("—")) {
+        if ("—".equals(d.get("titulo_incidencia"))) {
             tvIncidencia.setText("Sin incidencia asociada.");
         } else {
             tvIncidencia.setText("Título: " + d.get("titulo_incidencia") + "\nPrioridad: " + d.get("prioridad") +
