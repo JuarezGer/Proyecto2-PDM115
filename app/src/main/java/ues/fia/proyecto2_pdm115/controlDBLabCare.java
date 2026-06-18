@@ -13,6 +13,8 @@ import ues.fia.proyecto2_pdm115.utils.SeguridadUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class controlDBLabCare {
 
@@ -1644,25 +1646,39 @@ public class controlDBLabCare {
         );
     }
 
-    public HashMap<String, String> consultarEvidencia(int idEvidencia) {
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery(
-                    "SELECT ev.*, i.titulo AS incidencia, m.tipo_mantenimiento AS mantenimiento, " +
-                            "u.nombres || ' ' || u.apellidos AS usuario " +
-                            "FROM evidencias ev " +
-                            "LEFT JOIN incidencias i ON i.id_incidencia = ev.id_incidencia " +
-                            "LEFT JOIN mantenimientos m ON m.id_mantenimiento = ev.id_mantenimiento " +
-                            "INNER JOIN usuarios u ON u.id_usuario = ev.id_usuario " +
-                            "WHERE ev.id_evidencia = ?",
-                    new String[]{String.valueOf(idEvidencia)}
-            );
-            if (cursor.moveToFirst()) return cursorAMap(cursor);
-            return null;
-        } finally {
-            if (cursor != null) cursor.close();
+    // MÉTODO NUEVO — Obtener una evidencia por su ID
+    public Cursor consultarEvidencia(int idEvidencia) {
+        SQLiteDatabase db = DBHelper.getReadableDatabase();
+        String query = "SELECT * FROM evidencias WHERE id_evidencia = ?";
+        return db.rawQuery(query, new String[]{String.valueOf(idEvidencia)});
+    }
+
+    // MÉTODO NUEVO — Actualizar la evidencia
+    public String actualizarEvidencia(int idEvidencia, int idMantenimiento, Integer idIncidencia, String rutaArchivo, String descripcion) {
+        SQLiteDatabase db = DBHelper.getWritableDatabase();
+        ContentValues valores = new ContentValues();
+
+        valores.put("id_mantenimiento", idMantenimiento);
+
+        if (idIncidencia != null) {
+            valores.put("id_incidencia", idIncidencia);
+        } else {
+            valores.putNull("id_incidencia");
+        }
+
+        // Asumiendo que el tipo_evidencia no cambia, pero si necesitas cambiarlo, agrégalo aquí.
+        valores.put("ruta_archivo", rutaArchivo);
+        valores.put("descripcion", descripcion);
+
+        int filasAfectadas = db.update("evidencias", valores, "id_evidencia = ?", new String[]{String.valueOf(idEvidencia)});
+
+        if (filasAfectadas > 0) {
+            return "Evidencia actualizada correctamente";
+        } else {
+            return "Error al actualizar la evidencia";
         }
     }
+
 
     public String actualizarEvidencia(int idEvidencia, Integer idIncidencia, Integer idMantenimiento,
                                       int idUsuario, String tipoEvidencia,
@@ -1686,16 +1702,7 @@ public class controlDBLabCare {
         }
     }
 
-    public String eliminarEvidencia(int idEvidencia) {
-        try {
-            int filas = db.delete("evidencias", "id_evidencia = ?", new String[]{String.valueOf(idEvidencia)});
-            return filas > 0 ? "Evidencia eliminada correctamente." : "No se encontró la evidencia.";
-        } catch (SQLiteConstraintException e) {
-            return "No se puede eliminar la evidencia porque tiene registros relacionados.";
-        } catch (Exception e) {
-            return "Error al eliminar evidencia: " + e.getMessage();
-        }
-    }
+
 
     public Cursor consultarEvidenciasPorIncidenciaCursor(int idIncidencia) {
         return db.rawQuery(
@@ -1994,5 +2001,39 @@ public class controlDBLabCare {
                         "WHERE m.id_mantenimiento = ?";
 
         return db.rawQuery(query, new String[]{String.valueOf(idMantenimiento)});
+    }
+
+    // Obtener todas las evidencias
+    public List<Map<String, String>> obtenerEvidencias() {
+        List<Map<String, String>> lista = new ArrayList<>();
+        Cursor cursor = db.rawQuery(
+                "SELECT e.id_evidencia, e.tipo_evidencia, e.descripcion, " +
+                        "e.ruta_archivo, e.fecha_registro, " +
+                        "e.id_incidencia, e.id_mantenimiento " +
+                        "FROM evidencias e " +
+                        "ORDER BY e.fecha_registro DESC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Map<String, String> fila = new HashMap<>();
+                fila.put("id_evidencia",    cursor.getString(0));
+                fila.put("tipo_evidencia",  cursor.getString(1));
+                fila.put("descripcion",     cursor.getString(2));
+                fila.put("ruta_archivo",    cursor.getString(3));
+                fila.put("fecha_registro",  cursor.getString(4));
+                fila.put("id_incidencia",   cursor.getString(5));
+                fila.put("id_mantenimiento",cursor.getString(6));
+                lista.add(fila);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return lista;
+    }
+
+    // Eliminar una evidencia por ID
+    public boolean eliminarEvidencia(int idEvidencia) {
+        int filas = db.delete("evidencias", "id_evidencia = ?",
+                new String[]{String.valueOf(idEvidencia)});
+        return filas > 0;
     }
 }

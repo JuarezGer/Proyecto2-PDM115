@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue_gray_50">
@@ -92,7 +93,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="@color/blue_gray_600"
+                android:background="@drawable/bg_button_primary"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
                 android:text="Actualizar"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
@@ -102,7 +105,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/blue_gray_500"
+                android:background="@drawable/bg_button_secondary"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
                 android:text="Limpiar"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
@@ -112,7 +117,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_labcare_button_secondary"
+                android:background="@drawable/bg_button_secondary"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
                 android:text="Volver"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
