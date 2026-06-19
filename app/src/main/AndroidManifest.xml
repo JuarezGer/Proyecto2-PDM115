@@ -28,7 +28,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Proyecto2PDM115">
+        android:theme="@style/Theme.Proyecto2PDM115"
+        android:usesCleartextTraffic="true">
+
+        <activity android:name=".serviciosnube.ServiciosNubeMenuActivity" />
+
         <activity
             android:name=".VerMapaActivity"
             android:exported="false" />
@@ -67,6 +71,8 @@
             android:exported="false" />
         <activity android:name=".evidencia.SeleccionarEvidenciaActivity"
             android:exported="false" />
+        <activity android:name=".evidencia.ModificarEvidenciaActivity"
+            android:exported="false"/>
         <activity
             android:name=".mantenimiento.ConsultarMantenimientoActivity"
             android:exported="false"

@@ -55,4 +55,5 @@ dependencies {
     implementation("com.airbnb.android:lottie:6.4.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("org.osmdroid:osmdroid-android:6.1.20")
+    implementation("androidx.appcompat:appcompat:1.7.0")
 }
