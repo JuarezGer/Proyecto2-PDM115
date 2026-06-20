@@ -120,6 +120,17 @@ public class EquipoAdapter extends ArrayAdapter<EquipoAdapter.Equipo> {
             );
 
             intent.putExtra("id_equipo", equipo.id);
+            intent.putExtra("codigo_inventario", equipo.codigoInventario);
+            intent.putExtra("codigo_qr", equipo.codigoQr);
+            intent.putExtra("nombre", equipo.nombre);
+            intent.putExtra("marca", equipo.marca);
+            intent.putExtra("modelo", equipo.modelo);
+
+            intent.putExtra("laboratorio", equipo.laboratorio);
+
+            intent.putExtra("categoria", equipo.categoria);
+
+            intent.putExtra("estado_equipo", equipo.estado);
 
             context.startActivity(intent);
 
