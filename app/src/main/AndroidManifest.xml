@@ -34,6 +34,24 @@
         <activity android:name=".serviciosnube.ServiciosNubeMenuActivity" />
 
         <activity
+            android:name=".equipo.ActualizarEquipoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".equipo.VisualizarEquipoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".equipo.CrearEquipoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".categoriaEquipo.ActualizarCategoriaEquipoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".categoriaEquipo.VisualizarCategoriaEquipoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".categoriaEquipo.CrearCategoriaEquipoActivity"
+            android:exported="false" />
+        <activity
             android:name=".VerMapaActivity"
             android:exported="false" />
         <activity
@@ -69,7 +87,8 @@
         <activity
             android:name=".evidencia.EliminarEvidenciaActivity"
             android:exported="false" />
-        <activity android:name=".evidencia.SeleccionarEvidenciaActivity"
+        <activity
+            android:name=".evidencia.SeleccionarEvidenciaActivity"
             android:exported="false" />
         <activity android:name=".evidencia.ModificarEvidenciaActivity"
             android:exported="false"/>
@@ -135,6 +154,11 @@
         <activity android:name=".usuario.ActualizarUsuarioActivity" />
         <activity android:name=".usuario.CrearUsuarioActivity" />
         <activity android:name=".usuario.VisualizarUsuarioActivity" />
+        <activity android:name=".usuario.EliminarUsuarioActivity" /> <!-- Reportes -->
+        <activity android:name=".reporte.ReportesMenuActivity" />
+        <activity android:name=".reporte.GraficosIncidenciasActivity" />
+        <activity android:name=".reporte.GraficosMantenimientosActivity" />
+        <activity android:name=".reporte.VisualizarReporteGeneralActivity" /> <!-- Mapas -->
         <activity android:name=".usuario.EliminarUsuarioActivity" />
 
         <!-- CRUD TipoIncidencia -->

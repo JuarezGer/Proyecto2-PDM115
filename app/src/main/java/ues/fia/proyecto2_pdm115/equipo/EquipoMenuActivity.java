@@ -14,8 +14,8 @@ public class EquipoMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_equipo);
 
-        /*findViewById(R.id.btnCrearEquipo).setOnClickListener(v -> abrir(CrearEquipoActivity.class));
-        findViewById(R.id.btnVisualizarEquipo).setOnClickListener(v -> abrir(VisualizarEquipoActivity.class));
+        findViewById(R.id.btnCrearEquipo).setOnClickListener(v -> abrir(CrearEquipoActivity.class));
+        /*findViewById(R.id.btnVisualizarEquipo).setOnClickListener(v -> abrir(VisualizarEquipoActivity.class));
         findViewById(R.id.btnActualizarEquipo).setOnClickListener(v -> abrir(ActualizarEquipoActivity.class));
         findViewById(R.id.btnEliminarEquipo).setOnClickListener(v -> abrir(EliminarEquipoActivity.class));*/
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
