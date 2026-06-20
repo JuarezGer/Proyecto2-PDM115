@@ -25,6 +25,7 @@ import ues.fia.proyecto2_pdm115.reporte.ReportesMenuActivity;
 import ues.fia.proyecto2_pdm115.rol.RolMenuActivity;
 import ues.fia.proyecto2_pdm115.tipoIncidencia.TipoIncidenciaMenuActivity;
 import ues.fia.proyecto2_pdm115.usuario.UsuarioMenuActivity;
+import ues.fia.proyecto2_pdm115.serviciosnube.ServiciosNubeMenuActivity;
 import ues.fia.proyecto2_pdm115.utils.*;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private View cardEvidencias;
     private View cardReportes;
     private View cardMapas;
+    private View cardServiciosNube;
 
     private String rolActualNormalizado;
 
@@ -100,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         cardEvidencias = findViewById(R.id.cardEvidencias);
         cardReportes = findViewById(R.id.cardReportes);
         cardMapas = findViewById(R.id.cardMapas);
+        cardServiciosNube = findViewById(R.id.cardServiciosNube);
     }
 
     @Override
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         cardEvidencias.setOnClickListener(v -> abrirMenuSiTienePermiso("evidencias", EvidenciaMenuActivity.class));
         cardReportes.setOnClickListener(v -> abrirMenuSiTienePermiso("reportes", ReportesMenuActivity.class));
         cardMapas.setOnClickListener(v -> abrirMenuSiTienePermiso("mapas", MapasMenuActivity.class));
+        cardServiciosNube.setOnClickListener(v -> abrirMenuSiTienePermiso("serviciosnube",ServiciosNubeMenuActivity.class));
 
         findViewById(R.id.btnCerrarSesion).setOnClickListener(v -> {
             sessionManager.cerrarSesion();
@@ -190,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
                     cardMantenimientos,
                     cardEvidencias,
                     cardReportes,
-                    cardMapas
+                    cardMapas,
+                    cardServiciosNube
             );
         } else if (esRol("supervisor")) {
             mostrarTarjetas(
@@ -203,7 +208,8 @@ public class MainActivity extends AppCompatActivity {
                     cardMantenimientos,
                     cardEvidencias,
                     cardReportes,
-                    cardMapas
+                    cardMapas,
+                    cardServiciosNube
             );
         } else if (esRol("tecnico")) {
             mostrarTarjetas(
@@ -310,7 +316,8 @@ public class MainActivity extends AppCompatActivity {
                 cardMantenimientos,
                 cardEvidencias,
                 cardReportes,
-                cardMapas
+                cardMapas,
+                cardServiciosNube
         };
     }
 
@@ -347,6 +354,7 @@ public class MainActivity extends AppCompatActivity {
             case "categorias":
             case "tipos_incidencia":
             case "reportes":
+            case "serviciosnube":
                 return esRol("supervisor");
 
             case "equipos":

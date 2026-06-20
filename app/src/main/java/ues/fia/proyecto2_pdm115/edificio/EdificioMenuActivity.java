@@ -3,7 +3,9 @@ package ues.fia.proyecto2_pdm115.edificio;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import ues.fia.proyecto2_pdm115.*;
+
+import ues.fia.proyecto2_pdm115.MainActivity;
+import ues.fia.proyecto2_pdm115.R;
 import ues.fia.proyecto2_pdm115.equipo.EquipoMenuActivity;
 import ues.fia.proyecto2_pdm115.indicencia.IncidenciaMenuActivity;
 import ues.fia.proyecto2_pdm115.usuario.UsuarioMenuActivity;
@@ -15,16 +17,16 @@ public class EdificioMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_edificio);
 
-        findViewById(R.id.btnCrearEdificio).setOnClickListener(v -> abrir(CrearEdificioActivity.class));
-        findViewById(R.id.btnVisualizarEdificio).setOnClickListener(v -> abrir(ConsultarEdificiosActivity.class));
-       findViewById(R.id.btnActualizarEdificio).setOnClickListener(v -> abrir(ActualizarEdificiosActivity.class));
-       findViewById(R.id.btnEliminarEdificio).setOnClickListener(v -> abrir(EliminarEdificiosActivity.class));
-        findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
+        configurarBotonesCrud();
         configurarBarraInferior();
     }
 
-    private void abrir(Class<?> activityDestino) {
-        startActivity(new Intent(this, activityDestino));
+    private void configurarBotonesCrud() {
+        findViewById(R.id.btnCrearEdificio).setOnClickListener(v -> abrir(CrearEdificioActivity.class));
+        findViewById(R.id.btnVisualizarEdificio).setOnClickListener(v -> abrir(ConsultarEdificiosActivity.class));
+        findViewById(R.id.btnActualizarEdificio).setOnClickListener(v -> abrir(ActualizarEdificiosActivity.class));
+        findViewById(R.id.btnEliminarEdificio).setOnClickListener(v -> abrir(EliminarEdificiosActivity.class));
+        findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
     }
 
     private void configurarBarraInferior() {
@@ -37,6 +39,10 @@ public class EdificioMenuActivity extends Activity {
         findViewById(R.id.navEquipos).setOnClickListener(v -> abrirDesdeBarra(EquipoMenuActivity.class));
         findViewById(R.id.navReportes).setOnClickListener(v -> abrirDesdeBarra(IncidenciaMenuActivity.class));
         findViewById(R.id.navPerfil).setOnClickListener(v -> abrirDesdeBarra(UsuarioMenuActivity.class));
+    }
+
+    private void abrir(Class<?> activityDestino) {
+        startActivity(new Intent(this, activityDestino));
     }
 
     private void abrirDesdeBarra(Class<?> activityDestino) {

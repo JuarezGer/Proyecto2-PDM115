@@ -1,27 +1,34 @@
 package ues.fia.proyecto2_pdm115.edificio;
 
-import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import ues.fia.proyecto2_pdm115.R;
+import android.app.AlertDialog;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import ues.fia.proyecto2_pdm115.R;
 import ues.fia.proyecto2_pdm115.controlDBLabCare;
 
 public class EliminarEdificiosActivity extends AppCompatActivity {
 
     private controlDBLabCare helper;
+
     private EditText editBuscarCodigo;
-    private TextView txtNombre, txtDireccion, txtCoordenadas;
-    private Button btnBuscar, btnEliminar, btnVolver;
+    private TextView txtNombre;
+    private TextView txtDireccion;
+    private TextView txtCoordenadas;
+
+    private Button btnBuscar;
+    private Button btnEliminar;
+    private Button btnVolver;
+
     private int idEdificioSeleccionado = -1;
+    private String nombreEdificioSeleccionado = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +37,12 @@ public class EliminarEdificiosActivity extends AppCompatActivity {
 
         helper = new controlDBLabCare(this);
 
+        vincularVistas();
+        configurarEventos();
+        limpiarDetalle();
+    }
+
+    private void vincularVistas() {
         editBuscarCodigo = findViewById(R.id.editEliminarCodEdificio);
         txtNombre = findViewById(R.id.txtEliminarNombreEdificio);
         txtDireccion = findViewById(R.id.txtEliminarDireccionEdificio);
@@ -38,71 +51,121 @@ public class EliminarEdificiosActivity extends AppCompatActivity {
         btnBuscar = findViewById(R.id.btnBuscarEliminarEdificio);
         btnEliminar = findViewById(R.id.btnConfirmarEliminarEdificio);
         btnVolver = findViewById(R.id.btnVolverEliminarEdificio);
+    }
 
+    private void configurarEventos() {
         btnBuscar.setOnClickListener(v -> buscarEdificio());
-        btnEliminar.setOnClickListener(v -> eliminarEdificio());
+        btnEliminar.setOnClickListener(v -> confirmarEliminacion());
         btnVolver.setOnClickListener(v -> finish());
     }
 
     private void buscarEdificio() {
         String codBuscar = editBuscarCodigo.getText().toString().trim();
+
         if (codBuscar.isEmpty()) {
-            Toast.makeText(this, "Por favor ingrese un código para buscar.", Toast.LENGTH_SHORT).show();
+            editBuscarCodigo.setError("Ingrese el código del edificio");
+            editBuscarCodigo.requestFocus();
             return;
         }
 
-        helper.abrir();
+        Cursor cursor = null;
+
         try {
-            Cursor cursor = helper.getDb().query("edificios", null, "codigo = ?", new String[]{codBuscar}, null, null, null);
+            helper.abrir();
+
+            cursor = helper.getDb().query(
+                    "edificios",
+                    null,
+                    "codigo = ?",
+                    new String[]{codBuscar},
+                    null,
+                    null,
+                    null
+            );
 
             if (cursor != null && cursor.moveToFirst()) {
                 idEdificioSeleccionado = cursor.getInt(cursor.getColumnIndexOrThrow("id_edificio"));
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                nombreEdificioSeleccionado = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
 
-                String direccion = "No asignada";
-                try {
-                    direccion = cursor.getString(cursor.getColumnIndexOrThrow("direccion"));
-                    if(direccion == null || direccion.isEmpty()) direccion = "No asignada";
-                } catch(Exception e) { }
+                int idxLat = cursor.getColumnIndexOrThrow("latitud");
+                int idxLon = cursor.getColumnIndexOrThrow("longitud");
 
-                Double lat = cursor.isNull(cursor.getColumnIndexOrThrow("latitud")) ? null : cursor.getDouble(cursor.getColumnIndexOrThrow("latitud"));
-                Double lon = cursor.isNull(cursor.getColumnIndexOrThrow("longitud")) ? null : cursor.getDouble(cursor.getColumnIndexOrThrow("longitud"));
-                String coords = (lat != null && lon != null) ?  "\n" + "Latitud: " + lat +  "\n" +"Longitud: " + lon : "No asignadas";
+                String lat = cursor.isNull(idxLat) ? "No asignada" : String.valueOf(cursor.getDouble(idxLat));
+                String lon = cursor.isNull(idxLon) ? "No asignada" : String.valueOf(cursor.getDouble(idxLon));
 
-                txtNombre.setText("Nombre: " + nombre);
-                txtDireccion.setText("Dirección: " + direccion);
-                txtCoordenadas.setText("Ubicación: " + coords);
+                txtNombre.setText("Nombre: " + nombreEdificioSeleccionado);
 
+                // Tu tabla edificios actual no tiene campo direccion.
+                txtDireccion.setText("Dirección: No disponible en la tabla actual");
+
+                txtCoordenadas.setText("Ubicación:\nLatitud: " + lat + "\nLongitud: " + lon);
+
+                btnEliminar.setEnabled(true);
                 Toast.makeText(this, "Edificio cargado para eliminación.", Toast.LENGTH_SHORT).show();
-                cursor.close();
             } else {
-                idEdificioSeleccionado = -1;
-                txtNombre.setText("Nombre: (No encontrado)");
-                txtDireccion.setText("Dirección: (No encontrado)");
-                txtCoordenadas.setText("Ubicación: (No encontrado)");
+                limpiarDetalle();
                 Toast.makeText(this, "No se encontró ningún edificio con ese código.", Toast.LENGTH_SHORT).show();
             }
+        } catch (SQLException e) {
+            Toast.makeText(this, "Error al abrir la base de datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(this, "Error al buscar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al buscar: " + e.getMessage(), Toast.LENGTH_LONG).show();
         } finally {
+            if (cursor != null) cursor.close();
             helper.cerrar();
         }
     }
 
-    private void eliminarEdificio() {
+    private void confirmarEliminacion() {
         if (idEdificioSeleccionado == -1) {
             Toast.makeText(this, "Debe buscar y seleccionar un edificio válido primero.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        helper.abrir();
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmar eliminación")
+                .setMessage("¿Está seguro de eliminar el edificio?\n\n" + nombreEdificioSeleccionado)
+                .setPositiveButton("Sí, eliminar", (dialog, which) -> eliminarEdificio())
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
 
-        String resultado = helper.eliminarEdificio(idEdificioSeleccionado);
-        helper.cerrar();
+    private void eliminarEdificio() {
+        try {
+            helper.abrir();
 
-        Toast.makeText(this, resultado, Toast.LENGTH_LONG).show();
-        if (resultado.contains("correctamente") || !resultado.contains("Error")) {
-            finish();
+            String resultado = helper.eliminarEdificio(idEdificioSeleccionado);
+            Toast.makeText(this, resultado, Toast.LENGTH_LONG).show();
+
+            if (resultado.toLowerCase().contains("correctamente")) {
+                editBuscarCodigo.setText("");
+                limpiarDetalle();
+                editBuscarCodigo.requestFocus();
+            }
+        } catch (SQLException e) {
+            Toast.makeText(this, "Error al abrir la base de datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error al eliminar edificio: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } finally {
+            helper.cerrar();
+        }
+    }
+
+    private void limpiarDetalle() {
+        idEdificioSeleccionado = -1;
+        nombreEdificioSeleccionado = "";
+        txtNombre.setText("Nombre: ");
+        txtDireccion.setText("Dirección: ");
+        txtCoordenadas.setText("Ubicación: ");
+        btnEliminar.setEnabled(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (helper != null) {
+            helper.cerrar();
+            helper = null;
         }
     }
 }
