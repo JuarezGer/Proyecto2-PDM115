@@ -48,6 +48,9 @@ dependencies {
     implementation("com.itextpdf:itext7-core:7.2.5")
     implementation(files("libs/library-1.0.4.aar"))
     implementation("org.apache.poi:poi:3.17")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
+
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.airbnb.android:lottie:6.4.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
