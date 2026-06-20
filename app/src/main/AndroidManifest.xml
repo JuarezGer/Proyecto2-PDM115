@@ -31,7 +31,11 @@
         android:theme="@style/Theme.Proyecto2PDM115"
         android:usesCleartextTraffic="true">
 
+        <!-- Servicios en la nube -->
         <activity android:name=".serviciosnube.ServiciosNubeMenuActivity" />
+        <activity android:name=".serviciosnube.DatosNubeActivity" />
+        <activity android:name=".serviciosnube.FusionarDatosActivity" />
+        <activity android:name=".serviciosnube.ModificarRolesUsuariosActivity" />
 
         <activity
             android:name=".equipo.ActualizarEquipoActivity"
@@ -143,36 +147,26 @@
         <activity android:name=".tipoIncidencia.ActualizarTipoIncidenciaActivity" />
         <activity android:name=".tipoIncidencia.VisualizarTipoIncidenciaActivity" />
         <activity android:name=".tipoIncidencia.EliminarTipoIncidenciaActivity" />
-
         <!-- CRUD Rol -->
         <activity android:name=".rol.CrearRolActivity" />
         <activity android:name=".rol.ActualizarRolActivity" />
         <activity android:name=".rol.VisualizarRolesActivity" />
         <activity android:name=".rol.EliminarRolActivity" />
-
-        <!-- CRUD Rol -->
+        <!-- CRUD Usuario -->
         <activity android:name=".usuario.ActualizarUsuarioActivity" />
         <activity android:name=".usuario.CrearUsuarioActivity" />
         <activity android:name=".usuario.VisualizarUsuarioActivity" />
-        <activity android:name=".usuario.EliminarUsuarioActivity" /> <!-- Reportes -->
+        <activity android:name=".usuario.EliminarUsuarioActivity" />
+        <!-- Reportes -->
         <activity android:name=".reporte.ReportesMenuActivity" />
         <activity android:name=".reporte.GraficosIncidenciasActivity" />
         <activity android:name=".reporte.GraficosMantenimientosActivity" />
-        <activity android:name=".reporte.VisualizarReporteGeneralActivity" /> <!-- Mapas -->
-        <activity android:name=".usuario.EliminarUsuarioActivity" />
-
+        <activity android:name=".reporte.VisualizarReporteGeneralActivity" />
         <!-- CRUD TipoIncidencia -->
         <activity android:name=".indicencia.CrearIncidenciaActivity"/>
         <activity android:name=".indicencia.VisualizarIncidenciaActivity"/>
         <activity android:name=".indicencia.ActualizarIncidenciaActivity"/>
         <activity android:name=".indicencia.EliminarIncidenciaActivity"/>
-
-        <!-- Reportes -->
-        <activity android:name=".reporte.ReportesMenuActivity"/>
-        <activity android:name=".reporte.GraficosIncidenciasActivity"/>
-        <activity android:name=".reporte.GraficosMantenimientosActivity"/>
-        <activity android:name=".reporte.VisualizarReporteGeneralActivity"/>
-
         <!-- Mapas -->
         <activity android:name=".mapa.MapasMenuActivity" />
         <activity android:name=".mapa.MapaDetalleActivity" />

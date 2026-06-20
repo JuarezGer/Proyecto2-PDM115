@@ -28,13 +28,13 @@ public class ApiServiciosNubeClient {
     public static void get(String urlString, ApiCallback callback) {
         executor.execute(() -> {
             HttpURLConnection connection = null;
-
             try {
                 URL url = new URL(urlString);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setConnectTimeout(15000);
-                connection.setReadTimeout(15000);
+                connection.setReadTimeout(20000);
+                connection.setRequestProperty("Accept", "application/json");
 
                 int statusCode = connection.getResponseCode();
                 String response = leerRespuesta(connection, statusCode);
@@ -44,13 +44,10 @@ public class ApiServiciosNubeClient {
                 } else {
                     mainHandler.post(() -> callback.onError(response));
                 }
-
             } catch (Exception e) {
                 mainHandler.post(() -> callback.onError("Error de conexión: " + e.getMessage()));
             } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
+                if (connection != null) connection.disconnect();
             }
         });
     }
@@ -58,7 +55,6 @@ public class ApiServiciosNubeClient {
     public static void postJson(String urlString, JSONObject body, ApiCallback callback) {
         executor.execute(() -> {
             HttpURLConnection connection = null;
-
             try {
                 byte[] jsonBytes = body.toString().getBytes(StandardCharsets.UTF_8);
 
@@ -84,40 +80,26 @@ public class ApiServiciosNubeClient {
                 } else {
                     mainHandler.post(() -> callback.onError(response));
                 }
-
             } catch (Exception e) {
                 mainHandler.post(() -> callback.onError("Error de conexión: " + e.getMessage()));
             } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
+                if (connection != null) connection.disconnect();
             }
         });
     }
 
     private static String leerRespuesta(HttpURLConnection connection, int statusCode) throws Exception {
-        InputStream inputStream;
+        InputStream inputStream = statusCode >= 200 && statusCode < 300
+                ? connection.getInputStream()
+                : connection.getErrorStream();
 
-        if (statusCode >= 200 && statusCode < 300) {
-            inputStream = connection.getInputStream();
-        } else {
-            inputStream = connection.getErrorStream();
-            if (inputStream == null) {
-                inputStream = connection.getInputStream();
-            }
-        }
+        if (inputStream == null) inputStream = connection.getInputStream();
 
         StringBuilder response = new StringBuilder();
-
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
+            while ((line = reader.readLine()) != null) response.append(line);
         }
-
         return response.toString();
     }
 }
