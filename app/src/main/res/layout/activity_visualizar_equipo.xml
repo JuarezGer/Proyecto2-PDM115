@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -75,7 +76,9 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/bg_labcare_button_secondary"
+            android:background="@drawable/bg_button_secondary"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
             android:text="Volver"
             android:textColor="@color/white"
             android:textStyle="bold" />

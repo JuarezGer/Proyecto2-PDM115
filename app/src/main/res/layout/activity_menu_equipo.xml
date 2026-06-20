@@ -104,24 +104,12 @@
                         android:textStyle="bold" />
 
                     <Button
-                        android:id="@+id/btnActualizarEquipo"
+                        android:id="@+id/btnEscanearQrEquipo"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="12dp"
                         android:background="@drawable/bg_button_secondary"
-                        android:text="Actualizar Equipos"
-                        android:textAllCaps="false"
-                        android:textColor="@android:color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btnEliminarEquipo"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="12dp"
-                        android:background="@drawable/bg_button_danger"
-                        android:text="Eliminar Equipos"
+                        android:text="Escanear código QR"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
                         android:textSize="15sp"

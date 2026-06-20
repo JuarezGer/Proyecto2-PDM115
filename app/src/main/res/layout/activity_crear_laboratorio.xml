@@ -199,6 +199,8 @@
                     android:layout_weight="1"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/bg_button_primary"
+                    android:backgroundTint="@null"
+                    app:backgroundTint="@null"
                     android:text="Guardar"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"

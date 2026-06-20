@@ -3,7 +3,9 @@ package ues.fia.proyecto2_pdm115.equipo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import ues.fia.proyecto2_pdm115.*;
+
+import ues.fia.proyecto2_pdm115.MainActivity;
+import ues.fia.proyecto2_pdm115.R;
 import ues.fia.proyecto2_pdm115.indicencia.IncidenciaMenuActivity;
 import ues.fia.proyecto2_pdm115.usuario.UsuarioMenuActivity;
 
@@ -15,10 +17,10 @@ public class EquipoMenuActivity extends Activity {
         setContentView(R.layout.activity_menu_equipo);
 
         findViewById(R.id.btnCrearEquipo).setOnClickListener(v -> abrir(CrearEquipoActivity.class));
-        /*findViewById(R.id.btnVisualizarEquipo).setOnClickListener(v -> abrir(VisualizarEquipoActivity.class));
-        findViewById(R.id.btnActualizarEquipo).setOnClickListener(v -> abrir(ActualizarEquipoActivity.class));
-        findViewById(R.id.btnEliminarEquipo).setOnClickListener(v -> abrir(EliminarEquipoActivity.class));*/
+        findViewById(R.id.btnVisualizarEquipo).setOnClickListener(v -> abrir(VisualizarEquipoActivity.class));
+        findViewById(R.id.btnEscanearQrEquipo).setOnClickListener(v -> abrir(EscanearQrEquipoActivity.class));
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
+
         configurarBarraInferior();
     }
 
