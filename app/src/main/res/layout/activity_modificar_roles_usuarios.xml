@@ -165,7 +165,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/bg_button_primary"
+                    android:background="@drawable/bg_button_secondary"
                     android:backgroundTint="@null"
                     app:backgroundTint="@null"
                     android:text="Volver"

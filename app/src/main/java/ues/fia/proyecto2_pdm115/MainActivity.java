@@ -1,11 +1,23 @@
 package ues.fia.proyecto2_pdm115;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -23,10 +35,10 @@ import ues.fia.proyecto2_pdm115.mantenimiento.MantenimientoMenuActivity;
 import ues.fia.proyecto2_pdm115.mapa.MapasMenuActivity;
 import ues.fia.proyecto2_pdm115.reporte.ReportesMenuActivity;
 import ues.fia.proyecto2_pdm115.rol.RolMenuActivity;
+import ues.fia.proyecto2_pdm115.serviciosnube.ServiciosNubeMenuActivity;
 import ues.fia.proyecto2_pdm115.tipoIncidencia.TipoIncidenciaMenuActivity;
 import ues.fia.proyecto2_pdm115.usuario.UsuarioMenuActivity;
-import ues.fia.proyecto2_pdm115.serviciosnube.ServiciosNubeMenuActivity;
-import ues.fia.proyecto2_pdm115.utils.*;
+import ues.fia.proyecto2_pdm115.utils.SessionManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private SessionManager sessionManager;
 
     private LinearLayout contenedorMenuPrincipal;
+    private LinearLayout contenedorAlertasDispositivo;
 
     private View cardRoles;
     private View cardUsuarios;
@@ -56,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
     private View cardServiciosNube;
 
     private String rolActualNormalizado;
+
+    private boolean alertaGpsCerrada = false;
+    private boolean alertaInternetCerrada = false;
+    private boolean ultimoGpsActivo = true;
+    private boolean ultimoInternetActivo = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         configurarBarraInferior();
         aplicarPermisosPorRol();
         cargarResumenRapido();
+        verificarEstadoDispositivoYMostrarAlertas();
     }
 
     private void enlazarVistas() {
@@ -113,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         }
         abrirBaseDatos();
         cargarResumenRapido();
+        verificarEstadoDispositivoYMostrarAlertas();
     }
 
     private void abrirBaseDatos() {
@@ -148,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         cardEvidencias.setOnClickListener(v -> abrirMenuSiTienePermiso("evidencias", EvidenciaMenuActivity.class));
         cardReportes.setOnClickListener(v -> abrirMenuSiTienePermiso("reportes", ReportesMenuActivity.class));
         cardMapas.setOnClickListener(v -> abrirMenuSiTienePermiso("mapas", MapasMenuActivity.class));
-        cardServiciosNube.setOnClickListener(v -> abrirMenuSiTienePermiso("serviciosnube",ServiciosNubeMenuActivity.class));
+        cardServiciosNube.setOnClickListener(v -> abrirMenuSiTienePermiso("serviciosnube", ServiciosNubeMenuActivity.class));
 
         findViewById(R.id.btnCerrarSesion).setOnClickListener(v -> {
             sessionManager.cerrarSesion();
@@ -438,6 +458,181 @@ public class MainActivity extends AppCompatActivity {
             if (cursor != null) {
                 cursor.close();
             }
+        }
+    }
+
+    private void verificarEstadoDispositivoYMostrarAlertas() {
+        boolean gpsActivo = estaGpsActivo();
+        boolean internetActivo = hayAccesoInternet();
+
+        if (gpsActivo != ultimoGpsActivo) {
+            alertaGpsCerrada = false;
+            ultimoGpsActivo = gpsActivo;
+        }
+
+        if (internetActivo != ultimoInternetActivo) {
+            alertaInternetCerrada = false;
+            ultimoInternetActivo = internetActivo;
+        }
+
+        limpiarAlertasDispositivo();
+
+        if (!gpsActivo && !alertaGpsCerrada) {
+            agregarAlertaDispositivo(
+                    "GPS desactivado",
+                    "Activa el GPS del dispositivo para usar mapas y ubicaciones correctamente.",
+                    () -> alertaGpsCerrada = true
+            );
+        }
+
+        if (!internetActivo && !alertaInternetCerrada) {
+            agregarAlertaDispositivo(
+                    "Sin acceso a internet",
+                    "Revisa tu conexión para usar servicios en la nube, mapas o funciones en línea.",
+                    () -> alertaInternetCerrada = true
+            );
+        }
+    }
+
+    private void limpiarAlertasDispositivo() {
+        if (contenedorAlertasDispositivo != null) {
+            contenedorAlertasDispositivo.removeAllViews();
+        }
+    }
+
+    private void agregarAlertaDispositivo(String titulo, String mensaje, Runnable accionCerrar) {
+        LinearLayout contenedor = obtenerContenedorAlertasDispositivo();
+        if (contenedor == null) {
+            return;
+        }
+
+        LinearLayout alerta = new LinearLayout(this);
+        alerta.setOrientation(LinearLayout.HORIZONTAL);
+        alerta.setGravity(Gravity.CENTER_VERTICAL);
+        alerta.setPadding(dp(14), dp(10), dp(8), dp(10));
+
+        GradientDrawable fondo = new GradientDrawable();
+        fondo.setColor(Color.WHITE);
+        fondo.setCornerRadius(dp(14));
+        fondo.setStroke(dp(1), Color.rgb(207, 216, 220));
+        alerta.setBackground(fondo);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            alerta.setElevation(dp(6));
+        }
+
+        LinearLayout textos = new LinearLayout(this);
+        textos.setOrientation(LinearLayout.VERTICAL);
+
+        TextView txtTitulo = new TextView(this);
+        txtTitulo.setText(titulo);
+        txtTitulo.setTextColor(Color.rgb(38, 50, 56));
+        txtTitulo.setTextSize(15);
+        txtTitulo.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+
+        TextView txtMensaje = new TextView(this);
+        txtMensaje.setText(mensaje);
+        txtMensaje.setTextColor(Color.rgb(69, 90, 100));
+        txtMensaje.setTextSize(13);
+        txtMensaje.setPadding(0, dp(2), 0, 0);
+
+        textos.addView(txtTitulo);
+        textos.addView(txtMensaje);
+
+        LinearLayout.LayoutParams paramsTextos = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1
+        );
+        alerta.addView(textos, paramsTextos);
+
+        TextView btnCerrar = new TextView(this);
+        btnCerrar.setText("×");
+        btnCerrar.setTextColor(Color.rgb(69, 90, 100));
+        btnCerrar.setTextSize(26);
+        btnCerrar.setGravity(Gravity.CENTER);
+        btnCerrar.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        btnCerrar.setPadding(dp(10), 0, dp(10), dp(2));
+        btnCerrar.setOnClickListener(v -> {
+            contenedor.removeView(alerta);
+            if (accionCerrar != null) {
+                accionCerrar.run();
+            }
+        });
+
+        alerta.addView(btnCerrar, new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+
+        LinearLayout.LayoutParams paramsAlerta = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        paramsAlerta.setMargins(0, 0, 0, dp(10));
+        contenedor.addView(alerta, paramsAlerta);
+    }
+
+    private LinearLayout obtenerContenedorAlertasDispositivo() {
+        if (contenedorAlertasDispositivo != null) {
+            return contenedorAlertasDispositivo;
+        }
+
+        FrameLayout root = findViewById(android.R.id.content);
+        if (root == null) {
+            return null;
+        }
+
+        contenedorAlertasDispositivo = new LinearLayout(this);
+        contenedorAlertasDispositivo.setOrientation(LinearLayout.VERTICAL);
+        contenedorAlertasDispositivo.setPadding(dp(16), dp(12), dp(16), 0);
+        contenedorAlertasDispositivo.setClickable(false);
+        contenedorAlertasDispositivo.setFocusable(false);
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.gravity = Gravity.TOP;
+
+        root.addView(contenedorAlertasDispositivo, params);
+        return contenedorAlertasDispositivo;
+    }
+
+    private boolean estaGpsActivo() {
+        try {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            return locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean hayAccesoInternet() {
+        try {
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            if (connectivityManager == null) {
+                return false;
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Network network = connectivityManager.getActiveNetwork();
+                if (network == null) {
+                    return false;
+                }
+
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+                return capabilities != null
+                        && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+            } else {
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                return networkInfo != null && networkInfo.isConnected();
+            }
+        } catch (Exception e) {
+            return false;
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue_gray_50"
@@ -50,7 +51,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Escanea el código QR pegado al equipo. Al encontrarlo, se mostrará un modal con toda la información registrada."
+                android:text="Escanea el código QR pegado al equipo. Al encontrarlo, se mostrará toda la información registrada."
                 android:textColor="@color/blue_gray_700"
                 android:textSize="14sp" />
 
@@ -69,8 +70,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="18dp"
-                android:background="@drawable/bg_labcare_button_primary"
+                android:background="@drawable/bg_button_primary"
                 android:backgroundTint="@null"
+                app:backgroundTint="@null"
                 android:text="Iniciar escaneo"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
@@ -81,8 +83,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_labcare_button_secondary"
+                android:background="@drawable/bg_button_secondary"
                 android:backgroundTint="@null"
+                app:backgroundTint="@null"
                 android:text="Volver"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
