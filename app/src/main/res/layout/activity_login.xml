@@ -176,7 +176,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:gravity="center"
-                    android:text="Usuarios de prueba: admin@labcare.com / admin123"
+                    android:text="Copyright © 2026 UES. All rights reserved."
                     android:textColor="@color/blue_gray_500"
                     android:textSize="12sp" />
 

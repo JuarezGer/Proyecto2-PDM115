@@ -40,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Consulta, compara y fusiona datos locales con XAMPP"
+                    android:text="Consulta, compara y fusiona datos locales con la nube"
                     android:textColor="#D7E0E5"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -228,7 +228,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_button_primary"
+                    android:background="@drawable/bg_button_secondary"
                     android:backgroundTint="@null"
                     app:backgroundTint="@null"
                     android:text="Volver"
